@@ -1,1 +1,2 @@
-export * from './use-paginate';
+export * from './use-active-location';
+export * from './use-auth';

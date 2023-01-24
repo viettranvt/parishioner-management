@@ -1,5 +1,5 @@
 const AppConfig = {
-   appName: 'QUẢN LÝ GIÁO DÂN',
+   appName: 'PHẦN MỀM QUẢN LÝ GIÁO DÂN',
    apiEndpoint: process.env.REACT_APP_API_ENDPOINT,
 };
 
