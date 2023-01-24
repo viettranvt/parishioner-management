@@ -1,4 +1,4 @@
-import { MainLayout } from 'components/MainLayout/MainLayout';
+import { MainLayout } from 'components/layouts/MainLayout';
 import { Counter } from 'features/counter/Counter';
 import './App.css';
 
