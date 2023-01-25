@@ -1,8 +1,9 @@
-import { Fragment, ReactNode, useMemo } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useActiveLocation } from 'hooks';
+import AppAssets from 'constants/app-assets';
 import { Pages } from 'constants/pages';
+import { useActiveLocation } from 'hooks';
+import { Fragment, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 const navbarItems = Array.from(Pages.values()).filter((p) => p.isPrivate && p.showOnNavbar);
@@ -30,7 +31,7 @@ export interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
    const activePage = useActiveLocation();
-   const pageTitle = useMemo(() => activePage?.title, [activePage?.title]);
+   // const pageTitle = useMemo(() => activePage?.title, [activePage?.title]);
 
    return (
       <>
@@ -43,7 +44,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         ```
       */}
          <div className="min-h-full">
-            <Disclosure as="nav" className="bg-gray-800">
+            <Disclosure as="nav" className="bg-primary">
                {({ open }) => (
                   <>
                      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -52,7 +53,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               <div className="flex-shrink-0">
                                  <img
                                     className="h-8 w-8"
-                                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                    src={AppAssets.logoPath}
                                     alt="Your Company"
                                  />
                               </div>
@@ -66,8 +67,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                              to={item.path}
                                              className={classNames(
                                                 active
-                                                   ? 'bg-gray-900 text-white'
-                                                   : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                   ? 'bg-dark-primary text-white'
+                                                   : 'text-gray-100 hover:bg-dark-primary hover:text-white',
                                                 'px-3 py-2 rounded-md text-sm font-medium'
                                              )}
                                              aria-current={active ? 'page' : undefined}
@@ -83,7 +84,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               <div className="ml-4 flex items-center md:ml-6">
                                  <button
                                     type="button"
-                                    className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                    className="rounded-full bg-dark-primary p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                  >
                                     <span className="sr-only">View notifications</span>
                                     <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -92,7 +93,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                  {/* Profile dropdown */}
                                  <Menu as="div" className="relative ml-3">
                                     <div>
-                                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                           <span className="sr-only">Open user menu</span>
                                           <img
                                              className="h-8 w-8 rounded-full"
@@ -157,7 +158,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                        className={classNames(
                                           active
                                              ? 'bg-gray-900 text-white'
-                                             : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                             : 'text-gray-100 hover:bg-gray-700 hover:text-white',
                                           'block px-3 py-2 rounded-md text-base font-medium'
                                        )}
                                        aria-current={active ? 'page' : undefined}
@@ -211,7 +212,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                )}
             </Disclosure>
 
-            {pageTitle !== undefined && (
+            {/* {pageTitle !== undefined && (
                <header className="bg-white shadow">
                   <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
                      <h1 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -219,7 +220,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                      </h1>
                   </div>
                </header>
-            )}
+            )} */}
             <main>
                <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">{children}</div>
             </main>
