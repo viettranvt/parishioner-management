@@ -67,8 +67,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                              to={item.path}
                                              className={classNames(
                                                 active
-                                                   ? 'bg-dark-primary text-white'
-                                                   : 'text-gray-100 hover:bg-dark-primary hover:text-white',
+                                                   ? 'bg-primary-dark text-white'
+                                                   : 'text-gray-100 hover:bg-primary-dark hover:text-white',
                                                 'px-3 py-2 rounded-md text-sm font-medium'
                                              )}
                                              aria-current={active ? 'page' : undefined}
@@ -84,7 +84,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               <div className="ml-4 flex items-center md:ml-6">
                                  <button
                                     type="button"
-                                    className="rounded-full bg-dark-primary p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                    className="rounded-full bg-primary-dark p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                  >
                                     <span className="sr-only">View notifications</span>
                                     <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -93,7 +93,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                  {/* Profile dropdown */}
                                  <Menu as="div" className="relative ml-3">
                                     <div>
-                                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-primary-dark text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                           <span className="sr-only">Open user menu</span>
                                           <img
                                              className="h-8 w-8 rounded-full"

@@ -24,7 +24,7 @@ export function SButton({
                'h-6 text-xs': size === 'small',
                'h-10 text-base': size === 'large',
                'pl-0 pr-3': icon !== undefined && size === 'small',
-               'text-white bg-primary hover:bg-dark-primary active:bg-primary':
+               'text-white bg-primary hover:bg-primary-dark active:bg-primary':
                   type === 'primary' && !outlined,
                'bg-gray-100 text-gray-600 hover:bg-gray-200': type === 'secondary',
                'bg-transparent text-primary border border-primary hover:text-white hover:bg-primary':

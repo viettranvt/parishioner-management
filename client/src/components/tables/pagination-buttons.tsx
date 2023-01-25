@@ -36,8 +36,8 @@ export function PaginationButtons(props: PaginationButtonsProps) {
                         <a
                            href="javascript:void(0)"
                            aria-current={currentPage == item ? 'page' : false}
-                           className={`px-3 py-2 rounded-lg duration-150 hover:text-primary hover:bg-light-primary ${
-                              currentPage == item ? 'bg-light-primary text-primary font-medium' : ''
+                           className={`px-3 py-2 rounded-lg duration-150 hover:text-primary hover:bg-primary-light ${
+                              currentPage == item ? 'bg-primary-light text-primary font-medium' : ''
                            }`}
                         >
                            {item}
