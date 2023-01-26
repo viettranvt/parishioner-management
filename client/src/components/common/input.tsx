@@ -8,13 +8,21 @@ export interface InputProps {
    placeholder?: string;
    type?: HTMLInputTypeAttribute;
    size?: 'small' | 'medium' | 'large';
+   autofocus?: boolean;
 }
 
-export function Input({ label, placeholder, type = 'text', size = 'medium' }: InputProps) {
+export function Input({
+   label,
+   placeholder,
+   type = 'text',
+   size = 'medium',
+   autofocus = false,
+}: InputProps) {
    return (
       <div className="form-control w-full">
          {label !== undefined && <FormFieldLabel>{label}</FormFieldLabel>}
          <input
+            autoFocus={autofocus}
             type={type}
             placeholder={placeholder}
             className={twMerge(

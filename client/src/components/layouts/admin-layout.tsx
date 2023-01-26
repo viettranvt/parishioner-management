@@ -45,7 +45,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
    return (
       <>
          <div className="min-h-full">
-            <Disclosure as="nav" className="bg-primary">
+            <Disclosure as="nav" className="bg-gradient-to-r from-primary-dark to-primary-light">
                {({ open }) => (
                   <>
                      <div className="mx-auto max-w-7xl px-4 sm:px-6">
