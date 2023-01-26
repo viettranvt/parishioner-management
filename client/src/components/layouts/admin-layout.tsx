@@ -1,7 +1,7 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import AppAssets from 'constants/app-assets';
-import { Pages } from 'constants/pages';
+import { PageId, Pages } from 'constants/pages';
 import { useActiveLocation } from 'hooks';
 import { Fragment, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
@@ -51,11 +51,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                         <div className="flex h-16 items-center justify-between">
                            <div className="flex items-center">
                               <div className="flex-shrink-0">
-                                 <img
-                                    className="h-8 w-8"
-                                    src={AppAssets.logoPath}
-                                    alt="Your Company"
-                                 />
+                                 <Link to="/">
+                                    <img
+                                       className="h-8 w-8"
+                                       src={AppAssets.logoPath}
+                                       alt="Your Company"
+                                    />
+                                 </Link>
                               </div>
                               <div className="hidden md:block">
                                  <div className="ml-10 flex items-baseline space-x-4">
@@ -69,7 +71,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                                 active
                                                    ? 'bg-primary-dark text-white'
                                                    : 'text-gray-100 hover:bg-primary-dark hover:text-white',
-                                                'px-3 py-2 rounded-md text-sm font-medium'
+                                                'px-3 py-2 rounded-md text-sm font-medium duration-150'
                                              )}
                                              aria-current={active ? 'page' : undefined}
                                           >

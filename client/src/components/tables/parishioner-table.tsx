@@ -116,7 +116,7 @@ export function ParishionerTable(props: ParishionerTableProps) {
                </thead>
                <tbody className="text-gray-600 divide-y">
                   {tableItems.map((item, idx) => (
-                     <tr key={idx}>
+                     <tr key={idx} className="hover:bg-primary-light duration-150 even:bg-gray-50">
                         <td className="px-4 py-2.5 whitespace-nowrap text-center">{idx + 1}</td>
                         <td className="px-4 py-2.5 whitespace-nowrap">
                            <ParishionerSummary avatar={item.avatar} fullName={item.fullName} />

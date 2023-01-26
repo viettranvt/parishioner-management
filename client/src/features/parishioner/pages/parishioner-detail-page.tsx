@@ -1,7 +1,5 @@
-import * as React from 'react';
+export default function ParishionerDetailPage() {
+   // const { id } = useParams();
 
-export interface ParishionerDetailPageProps {}
-
-export default function ParishionerDetailPage(props: ParishionerDetailPageProps) {
    return <div>ParishionerDetailPage</div>;
 }

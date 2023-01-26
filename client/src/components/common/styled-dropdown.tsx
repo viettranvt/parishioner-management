@@ -32,7 +32,7 @@ export function SDropdown<OptionValue extends string | number>({
                   clipRule="evenodd"
                />
             </svg>
-            <select className="w-full p-2 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600">
+            <select className="w-full p-2 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-primary">
                {(options || []).map((o) => (
                   <option key={o.value} value={o.value}>
                      {o.label}

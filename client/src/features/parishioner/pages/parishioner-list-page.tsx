@@ -2,9 +2,7 @@ import { Divider, SButton } from 'components/common';
 import { ParishionerFilterForm } from 'components/forms';
 import { ParishionerTable } from 'components/tables';
 
-export interface ParishionerListPageProps {}
-
-export default function ParishionerListPage(props: ParishionerListPageProps) {
+export default function ParishionerListPage() {
    return (
       <>
          <div className="flex justify-between">
