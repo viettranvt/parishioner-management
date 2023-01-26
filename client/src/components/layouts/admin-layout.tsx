@@ -1,9 +1,9 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import AppAssets from 'constants/app-assets';
-import { PageId, Pages } from 'constants/pages';
+import { PageConfig, PageId, Pages } from 'constants/pages';
 import { useActiveLocation } from 'hooks';
-import { Fragment, ReactNode } from 'react';
+import { Fragment, ReactNode, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const navbarItems = Array.from(Pages.values()).filter((p) => p.isPrivate && p.showOnNavbar);
@@ -30,24 +30,25 @@ export interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children }: AdminLayoutProps) {
-   const activePage = useActiveLocation();
-   // const pageTitle = useMemo(() => activePage?.title, [activePage?.title]);
+   const activeLocation = useActiveLocation();
+   const [activeNavItem, setActiveNavItem] = useState<PageConfig>();
+
+   useEffect(() => {
+      let relatedPage: PageConfig | undefined;
+      if (activeLocation?.relatedPageId) {
+         relatedPage = Pages.get(activeLocation.relatedPageId);
+      }
+
+      setActiveNavItem(relatedPage || activeLocation);
+   }, [activeLocation]);
 
    return (
       <>
-         {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
          <div className="min-h-full">
             <Disclosure as="nav" className="bg-primary">
                {({ open }) => (
                   <>
-                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                     <div className="mx-auto max-w-7xl px-4 sm:px-6">
                         <div className="flex h-16 items-center justify-between">
                            <div className="flex items-center">
                               <div className="flex-shrink-0">
@@ -62,7 +63,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               <div className="hidden md:block">
                                  <div className="ml-10 flex items-baseline space-x-4">
                                     {navbarItems.map((item) => {
-                                       const active = activePage?.id === item.id;
+                                       const active = activeNavItem?.id === item.id;
                                        return (
                                           <Link
                                              key={item.id}
@@ -151,7 +152,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                      <Disclosure.Panel className="md:hidden">
                         <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                            {navbarItems.map((item) => {
-                              const active = item.id === activePage?.id;
+                              const active = item.id === activeNavItem?.id;
                               return (
                                  <Link key={item.id} to={item.path}>
                                     <Disclosure.Button
@@ -224,7 +225,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                </header>
             )} */}
             <main>
-               <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">{children}</div>
+               <div className="mx-auto max-w-7xl py-6 sm:px-6">{children}</div>
             </main>
          </div>
       </>

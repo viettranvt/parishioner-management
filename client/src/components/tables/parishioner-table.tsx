@@ -1,7 +1,9 @@
-import { SButton } from 'components/common';
+import { Button } from 'components/common';
 import { DeleteIcon, EditIcon, SearchIcon } from 'components/icons';
-import { ParishionerSummary } from 'components/parishioner-summary';
+import { ParishionerCard } from 'components';
 import { PaginationButtons } from 'components/tables/pagination-buttons';
+import { Link } from 'react-router-dom';
+import { PageId, Pages } from 'constants/pages';
 
 const tableItems = [
    {
@@ -119,7 +121,7 @@ export function ParishionerTable(props: ParishionerTableProps) {
                      <tr key={idx} className="hover:bg-primary-light duration-150 even:bg-gray-50">
                         <td className="px-4 py-2.5 whitespace-nowrap text-center">{idx + 1}</td>
                         <td className="px-4 py-2.5 whitespace-nowrap">
-                           <ParishionerSummary avatar={item.avatar} fullName={item.fullName} />
+                           <ParishionerCard avatar={item.avatar} fullName={item.fullName} />
                         </td>
                         <td className="px-4 py-2.5 whitespace-nowrap">{item.holyName}</td>
                         <td className="px-4 py-2.5 whitespace-nowrap">{item.birthDate}</td>
@@ -127,27 +129,21 @@ export function ParishionerTable(props: ParishionerTableProps) {
                         <td className="px-4 py-2.5 whitespace-nowrap">{item.parishName}</td>
                         <td className="px-4 py-2.5 whitespace-nowrap">
                            <div className="flex gap-2">
-                              <SButton
-                                 type="secondary"
-                                 size="small"
-                                 icon={<SearchIcon className="w3 h-3" />}
-                              >
-                                 Chi tiết
-                              </SButton>
-                              <SButton
-                                 type="secondary"
-                                 size="small"
-                                 icon={<EditIcon className="w3 h-3" />}
-                              >
-                                 Sửa
-                              </SButton>
-                              <SButton
-                                 type="secondary"
-                                 size="small"
-                                 icon={<DeleteIcon className="w3 h-3" />}
-                              >
+                              <Link to={Pages.get(PageId.parishionerDetail)?.path ?? ''}>
+                                 <Button size="small" icon={<SearchIcon className="w3 h-3" />}>
+                                    Chi tiết
+                                 </Button>
+                              </Link>
+
+                              <Link to={Pages.get(PageId.parishionerDetail)?.path ?? ''}>
+                                 <Button size="small" icon={<EditIcon className="w3 h-3" />}>
+                                    Sửa
+                                 </Button>
+                              </Link>
+
+                              <Button size="small" icon={<DeleteIcon className="w3 h-3" />}>
                                  Xoá
-                              </SButton>
+                              </Button>
                            </div>
                         </td>
                      </tr>

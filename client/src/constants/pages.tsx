@@ -18,22 +18,23 @@ export interface PageConfig {
    element: JSX.Element;
    showOnNavbar?: boolean;
    navTitle?: string;
+   relatedPageId?: PageId;
 }
 
 export const Pages = new Map<PageId, PageConfig>([
    [PageId.login, { id: PageId.login, path: '/dang-nhap', element: <LoginPage /> }],
-   [
-      PageId.dashboard,
-      {
-         id: PageId.dashboard,
-         path: '/tong-quan',
-         element: <DashboardPage />,
-         isPrivate: true,
-         showOnNavbar: true,
-         navTitle: 'Tổng quan',
-         title: 'Tổng quan',
-      },
-   ],
+   // [
+   //    PageId.dashboard,
+   //    {
+   //       id: PageId.dashboard,
+   //       path: '/tong-quan',
+   //       element: <DashboardPage />,
+   //       isPrivate: true,
+   //       showOnNavbar: true,
+   //       navTitle: 'Tổng quan',
+   //       title: 'Tổng quan',
+   //    },
+   // ],
    [
       PageId.parishionerList,
       {
@@ -54,6 +55,7 @@ export const Pages = new Map<PageId, PageConfig>([
          path: '/giao-dan/:id',
          element: <ParishionerDetailPage />,
          isPrivate: true,
+         relatedPageId: PageId.parishionerList,
       },
    ],
 ]);

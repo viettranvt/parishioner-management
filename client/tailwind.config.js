@@ -1,14 +1,42 @@
 /** @type {import('tailwindcss').Config} */
+
+const colors = {
+   primary: '#0ea5e9',
+   'primary-light': '#f0f9ff',
+   'primary-dark': '#0284c7',
+};
+
 module.exports = {
-   content: ['./src/**/*.{js,jsx,ts,tsx}'],
+   darkMode: 'dark',
+   content: [
+      './src/**/*.{js,jsx,ts,tsx}',
+      './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+   ],
    theme: {
       extend: {
-         colors: {
-            primary: '#0ea5e9',
-            'primary-light': '#f0f9ff',
-            'primary-dark': '#0284c7',
+         colors,
+         fontSize: {
+            xs: '0.625rem',
          },
       },
    },
-   plugins: [],
+   plugins: [require('daisyui')],
+   daisyui: {
+      styled: true,
+      themes: [
+         {
+            light: {
+               ...require('daisyui/src/colors/themes')['[data-theme=light]'],
+               primary: colors['primary'],
+               'primary-focus': colors['primary-dark'],
+            },
+         },
+      ],
+      base: true,
+      utils: true,
+      logs: true,
+      rtl: false,
+      prefix: '',
+      darkTheme: 'dark',
+   },
 };

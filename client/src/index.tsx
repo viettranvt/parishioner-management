@@ -6,9 +6,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
+import 'react-datepicker/dist/react-datepicker.css';
+import dateFnsVi from 'date-fns/locale/vi';
+import { registerLocale } from 'react-datepicker';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+registerLocale('vi', dateFnsVi);
 
 root.render(
    <React.StrictMode>

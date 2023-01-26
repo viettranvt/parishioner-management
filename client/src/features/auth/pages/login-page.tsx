@@ -1,4 +1,4 @@
-import { SButton, SInput } from 'components/common';
+import { Button, Input } from 'components/common';
 import AppAssets from 'constants/app-assets';
 import AppConfig from 'constants/app-config';
 import * as React from 'react';
@@ -19,11 +19,11 @@ export default function LoginPage(props: LoginPageProps) {
                <img className="w-20 mx-auto mt-2 mb-4" src={AppAssets.logoPath} alt="logo" />
 
                <form className="py-8 px-3 lg:px-6 space-y-5">
-                  <SInput label="Tên đăng nhập" />
+                  <Input label="Tên đăng nhập" />
 
-                  <SInput type="password" label="Mật khẩu" />
+                  <Input type="password" label="Mật khẩu" />
 
-                  <SButton>ĐĂNG NHẬP</SButton>
+                  <Button>ĐĂNG NHẬP</Button>
                </form>
             </div>
          </div>
