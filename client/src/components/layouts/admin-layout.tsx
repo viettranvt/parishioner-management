@@ -70,8 +70,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                              to={item.path}
                                              className={classNames(
                                                 active
-                                                   ? 'bg-primary-dark text-white'
-                                                   : 'text-gray-100 hover:bg-primary-dark hover:text-white',
+                                                   ? 'bg-primary text-white hover:bg-primary-dark'
+                                                   : 'text-gray-100 hover:bg-primary hover:text-white',
                                                 'px-3 py-2 rounded-md text-sm font-medium duration-150'
                                              )}
                                              aria-current={active ? 'page' : undefined}
@@ -87,7 +87,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               <div className="ml-4 flex items-center md:ml-6">
                                  <button
                                     type="button"
-                                    className="rounded-full bg-primary-dark p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                    className="rounded-full bg-primary p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                  >
                                     <span className="sr-only">View notifications</span>
                                     <BellIcon className="h-6 w-6" aria-hidden="true" />
