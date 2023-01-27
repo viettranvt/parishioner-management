@@ -1,5 +1,5 @@
 const AppAssets = {
-   logoPath: 'https://cdn-icons-png.flaticon.com/512/347/347441.png',
+   logoPath: '/assets/images/logo-gxtt.png',
 };
 
 export default AppAssets;

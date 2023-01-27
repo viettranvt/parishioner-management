@@ -1,8 +1,7 @@
-import { ParishionerCard } from 'components';
+import { ParishionerCard, ParishionerCardStyle } from 'components';
 import {
    Button,
    DatePicker,
-   Divider,
    FormFieldLabel,
    Input,
    Radio,
@@ -10,16 +9,20 @@ import {
    TextArea,
 } from 'components/common';
 import { ArrowLeftIcon, CheckIcon, PlusIcon, RefreshIcon } from 'components/icons';
+import { PageId, Pages } from 'constants/pages';
+import { Link } from 'react-router-dom';
 
 export default function ParishionerDetailPage() {
    // const { id } = useParams();
 
    return (
-      <div className="pb-10">
+      <div className="pt-2 pb-10">
          <div>
-            <h3 className="pb-2 text-primary text-xl font-bold sm:text-2xl space-x-3">
+            <h3 className="pb-2 text-white text-xl font-bold sm:text-2xl space-x-3 flex items-center gap-2">
+               <Link to={Pages.get(PageId.parishionerList)?.path || ''}>
+                  <ArrowLeftIcon className="w-7 h-7" />
+               </Link>
                <span>Thông tin giáo dân</span>
-               <span className="text-gray-300">#1</span>
             </h3>
          </div>
 
@@ -27,7 +30,7 @@ export default function ParishionerDetailPage() {
             <div className="grid grid-cols-5 gap-2">
                <div className="col-span-1">
                   <div className="flex flex-col items-center">
-                     <div className="-mt-20 rounded-full bg-primary p-1.5">
+                     <div className="-mt-20 rounded-full bg-primary p-1.5 shadow-md">
                         <div className="avatar border-8 border-primary-light rounded-full">
                            <div className="w-36 rounded-full">
                               <img
@@ -37,7 +40,7 @@ export default function ParishionerDetailPage() {
                            </div>
                         </div>
                      </div>
-                     <div className="mt-1">
+                     <div className="mt-2">
                         <FormFieldLabel>Ảnh đại diện</FormFieldLabel>
                      </div>
                   </div>
@@ -46,9 +49,9 @@ export default function ParishionerDetailPage() {
                <div className="pt-2 pb-4 pr-4 col-span-4">
                   <div className="grid grid-cols-3 gap-12">
                      <div className="space-y-3">
-                        <Input size="small" label="Họ tên" />
+                        <Input size="small" label="Họ tên" required />
 
-                        <Input size="small" label="Tên thánh" />
+                        <Input size="small" label="Tên thánh" required />
 
                         <DatePicker size="small" label="Ngày sinh" />
 
@@ -61,42 +64,9 @@ export default function ParishionerDetailPage() {
                            ]}
                         />
 
-                        <div>
-                           <FormFieldLabel>Địa chỉ</FormFieldLabel>
-                           <div className="flex flex-col gap-3">
-                              <Select
-                                 size="small"
-                                 placeholder="Chọn Tỉnh/Thành phố"
-                                 options={[
-                                    { label: 'Tây Ninh', value: 1 },
-                                    { label: 'Bình Dương', value: 2 },
-                                 ]}
-                              />
-                              <Select
-                                 size="small"
-                                 placeholder="Chọn Quận/Huyện"
-                                 options={[
-                                    { label: 'Quận 1', value: 1 },
-                                    { label: 'Quận Bình Thạnh', value: 2 },
-                                 ]}
-                              />
-                              <Select
-                                 size="small"
-                                 placeholder="Chọn Phường/Xã"
-                                 options={[
-                                    { label: 'Phường 1', value: 1 },
-                                    { label: 'Phường 2', value: 2 },
-                                 ]}
-                              />
-                              <Input size="small" placeholder="Nhập số nhà" />
-                           </div>
-                        </div>
+                        <TextArea size="small" label="Địa chỉ" />
 
-                        <div>
-                           <div className="pt-2">
-                              <TextArea className="h-32" size="small" label="Ghi chú" />
-                           </div>
-                        </div>
+                        <TextArea className="h-36" size="small" label="Ghi chú" />
                      </div>
                      <div className="space-y-3">
                         <div>
@@ -105,7 +75,7 @@ export default function ParishionerDetailPage() {
                               fullName="Trần Văn B"
                               avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                               title="Juse • 17/03/1975"
-                              mode="actions"
+                              style={ParishionerCardStyle.actions}
                            />
                         </div>
                         <div>
@@ -114,7 +84,7 @@ export default function ParishionerDetailPage() {
                               fullName="Vũ Thị C"
                               avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                               title="Maria • 17/03/1975"
-                              mode="actions"
+                              style={ParishionerCardStyle.actions}
                            />
                         </div>
                         <div>
@@ -123,7 +93,7 @@ export default function ParishionerDetailPage() {
                               fullName="Vũ Thị E"
                               avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                               title="Maria • 17/03/1975"
-                              mode="actions"
+                              style={ParishionerCardStyle.actions}
                            />
                         </div>
                         <div>
@@ -131,32 +101,28 @@ export default function ParishionerDetailPage() {
                            <Button icon={<PlusIcon className="w-4 h-4" />}>Thêm</Button>
                         </div>
                         <div className="pt-2">
-                           <div className="flex justify-between items-center">
-                              <FormFieldLabel>Con (3)</FormFieldLabel>
+                           <div className="flex justify-between">
+                              <FormFieldLabel>Con (2)</FormFieldLabel>
                               <Button
-                                 icon={<PlusIcon className="w-5 h-5" />}
+                                 icon={<PlusIcon className="w-4 h-4" />}
                                  shape="circle"
-                                 size="small"
-                                 type="primary"
-                                 outlined
+                                 size="sm"
                               />
                            </div>
-                           <div className="max-h-64 mt-2 p-2 pt-4 pl-5 border border-gray-200 rounded-xl space-y-4 overflow-y-auto">
-                              {Array.from(Array(8).keys()).map((_, idx) => (
-                                 <div key={idx} className="indicator w-full">
-                                    <span className="indicator-item indicator-start badge badge-primary">
-                                       {idx + 1}
-                                    </span>
-                                    <div className="w-full">
-                                       <ParishionerCard
-                                          fullName={`Nguyễn Thị D${idx + 1}`}
-                                          avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                          title="Maria • 17/03/2011"
-                                          mode="actions"
-                                       />
-                                    </div>
+                           <div className="mt-2 space-y-2">
+                              {Array.from(Array(2).keys()).map((_, idx) => (
+                                 <div className="w-full">
+                                    <ParishionerCard
+                                       fullName={`Nguyễn Thị D${idx + 1}`}
+                                       avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                       title="Maria • 17/03/2011"
+                                       style={ParishionerCardStyle.actions}
+                                    />
                                  </div>
                               ))}
+                           </div>
+                           <div className="mt-3">
+                              <Button>Xem thêm</Button>
                            </div>
                         </div>
                      </div>
@@ -177,15 +143,15 @@ export default function ParishionerDetailPage() {
                   </div>
                </div>
             </div>
-            <div className="pt-12 pb-4 px-4">
+            <div className="pt-12 pb-4 pl-4 pr-3.5">
                <div className="w-full grid grid-cols-3 gap-4">
-                  <Button icon={<ArrowLeftIcon />} size="large">
+                  <Button icon={<ArrowLeftIcon className="w-4 h-4" />} size="lg">
                      Trở lại
                   </Button>
-                  <Button icon={<RefreshIcon />} size="large">
+                  <Button icon={<RefreshIcon />} size="lg">
                      Khôi phục
                   </Button>
-                  <Button type="primary" icon={<CheckIcon />} size="large">
+                  <Button type="primary" icon={<CheckIcon />} size="lg">
                      Lưu thay đổi
                   </Button>
                </div>

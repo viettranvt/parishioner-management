@@ -1,42 +1,63 @@
+import classNames from 'classnames';
 import { Button, Dropdown } from 'components/common';
 import { MoreVerticalIcon } from 'components/icons';
 import { useMemo } from 'react';
 import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
 
+export enum ParishionerCardStyle {
+   simple,
+   actions,
+}
+
 interface SimpleInfoProps {
    fullName: string;
    avatar?: string;
    title?: string;
+   style?: ParishionerCardStyle;
 }
 
 export interface ParishionerCardProps extends SimpleInfoProps {
-   mode?: 'simple' | 'actions';
+   style?: ParishionerCardStyle;
 }
 
-function SimpleInfo({ fullName, avatar, title }: SimpleInfoProps) {
+function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
    const hasTitle = useMemo(() => title !== undefined, [title]);
+
    return (
       <div className="flex items-center space-x-3">
-         <div>
+         <div
+            className={classNames('bg-white rounded-full', {
+               'p-1': style === ParishionerCardStyle.actions,
+            })}
+         >
             <Avatar name={fullName} src={avatar} size={hasTitle ? '36' : '28'} round />
          </div>
          <div className="flex flex-col">
-            <span>{fullName}</span>
-            {hasTitle && <span className="text-xs text-gray-500 mt-0.5">{title}</span>}
+            <span
+               className={classNames({
+                  'text-sm': style === ParishionerCardStyle.actions,
+               })}
+            >
+               {fullName}
+            </span>
+            {hasTitle && <span className="text-xs text-gray-500 mt-1">{title}</span>}
          </div>
       </div>
    );
 }
 
-export function ParishionerCard({ mode = 'simple', ...simpleInfo }: ParishionerCardProps) {
-   if (mode === 'simple') {
-      return <SimpleInfo {...simpleInfo} />;
+export function ParishionerCard({
+   style = ParishionerCardStyle.simple,
+   ...simpleInfoProps
+}: ParishionerCardProps) {
+   if (style === ParishionerCardStyle.simple) {
+      return <SimpleInfo {...simpleInfoProps} />;
    }
 
    return (
-      <div className="card p-2 pl-3 flex justify-between items-center flex-row bg-gray-100 hover:bg-primary-light duration-150">
-         <SimpleInfo {...simpleInfo} />
+      <div className="card p-1.5 rounded-lg flex justify-between items-center flex-row bg-slate-100 hover:bg-primary-light duration-150">
+         <SimpleInfo style={style} {...simpleInfoProps} />
          <Dropdown
             menuItems={[
                <Link key="detail" to="/">
@@ -55,7 +76,7 @@ export function ParishionerCard({ mode = 'simple', ...simpleInfo }: ParishionerC
          >
             <Button
                className="bg-transparent hover:bg-transparent"
-               size="small"
+               size="sm"
                icon={<MoreVerticalIcon />}
                shape="circle"
                outlined={false}

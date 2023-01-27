@@ -1,8 +1,12 @@
+import classNames from 'classnames';
 import * as React from 'react';
+import { twMerge } from 'tailwind-merge';
 
-export interface IArrowLeftIconProps {}
+export interface IArrowLeftIconProps {
+   className?: string;
+}
 
-export function ArrowLeftIcon(props: IArrowLeftIconProps) {
+export function ArrowLeftIcon({ className }: IArrowLeftIconProps) {
    return (
       <svg
          xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +14,7 @@ export function ArrowLeftIcon(props: IArrowLeftIconProps) {
          viewBox="0 0 24 24"
          strokeWidth={1.5}
          stroke="currentColor"
-         className="w-4 h-4"
+         className={twMerge(classNames('w-6 h-6', className))}
       >
          <path
             strokeLinecap="round"

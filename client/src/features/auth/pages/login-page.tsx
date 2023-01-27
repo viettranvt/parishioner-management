@@ -1,11 +1,8 @@
 import { Button, Input } from 'components/common';
 import AppAssets from 'constants/app-assets';
 import AppConfig from 'constants/app-config';
-import * as React from 'react';
 
-export interface LoginPageProps {}
-
-export default function LoginPage(props: LoginPageProps) {
+export default function LoginPage() {
    return (
       <div
          className="h-screen relative"
@@ -17,26 +14,31 @@ export default function LoginPage(props: LoginPageProps) {
             backgroundSize: 'cover',
          }}
       >
-         <div className="card bg-base-100 shadow-2xl mx-auto max-w-lg h-full px-3 lg:px-8 rounded-none flex flex-row items-center">
-            <div className="mx-auto max-w-xl" style={{ marginTop: '-30%' }}>
+         <div className="card bg-base-100 shadow-2xl mx-auto xl:max-w-lg h-full rounded-none flex flex-row items-center">
+            <div className="mx-auto" style={{ marginTop: '-30%' }}>
                <h1 className="text-center text-2xl font-bold text-primary sm:text-2xl">
                   {AppConfig.appName}
                </h1>
 
-               <p className="mx-auto mt-3 max-w-lg text-center text-gray-500">Giáo xứ Thánh Tuân</p>
+               {/* <p className="mx-auto mt-3 max-w-lg text-center text-gray-500">Giáo xứ Thánh Tuân</p> */}
 
-               <img className="w-20 mx-auto mt-2 mb-2.5" src={AppAssets.logoPath} alt="logo" />
+               <img
+                  className="w-44 mx-auto"
+                  src={AppAssets.logoPath}
+                  alt="logo"
+                  style={{ marginTop: '-2%' }}
+               />
 
-               <form className="py-6 space-y-4">
+               <form className="space-y-4">
                   <Input label="Tên đăng nhập" placeholder="Nhập tên đăng nhập" autofocus />
 
                   <Input type="password" label="Mật khẩu" placeholder="Nhập mật khẩu" />
 
-                  <div className="pt-4">
+                  <div className="pt-3">
                      <Button
                         type="primary"
                         className="bg-gradient-to-r from-primary-dark to-primary"
-                        size="large"
+                        size="lg"
                         icon={
                            <svg
                               xmlns="http://www.w3.org/2000/svg"

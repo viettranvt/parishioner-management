@@ -105,7 +105,7 @@ export function ParishionerTable(props: ParishionerTableProps) {
       <>
          <div className="w-full shadow-sm border rounded-lg overflow-x-auto">
             <table className="w-full table-auto text-sm text-left">
-               <thead className="bg-gray-50 text-gray-600 font-medium border-b">
+               <thead className="bg-gray-100 text-gray-600 font-medium border-b">
                   <tr>
                      <th className="py-3 px-4 text-center">#</th>
                      <th className="py-3 px-4">Họ tên</th>
@@ -130,18 +130,18 @@ export function ParishionerTable(props: ParishionerTableProps) {
                         <td className="px-4 py-2.5 whitespace-nowrap">
                            <div className="flex gap-2">
                               <Link to={Pages.get(PageId.parishionerDetail)?.path ?? ''}>
-                                 <Button size="small" icon={<SearchIcon className="w3 h-3" />}>
+                                 <Button size="sm" icon={<SearchIcon className="w3 h-3" />}>
                                     Chi tiết
                                  </Button>
                               </Link>
 
                               <Link to={Pages.get(PageId.parishionerDetail)?.path ?? ''}>
-                                 <Button size="small" icon={<EditIcon className="w3 h-3" />}>
+                                 <Button size="sm" icon={<EditIcon className="w3 h-3" />}>
                                     Sửa
                                  </Button>
                               </Link>
 
-                              <Button size="small" icon={<DeleteIcon className="w3 h-3" />}>
+                              <Button size="sm" icon={<DeleteIcon className="w3 h-3" />}>
                                  Xoá
                               </Button>
                            </div>
@@ -151,7 +151,7 @@ export function ParishionerTable(props: ParishionerTableProps) {
                </tbody>
             </table>
          </div>
-         <div className="mt-6">
+         <div className="mt-5">
             <PaginationButtons />
          </div>
       </>

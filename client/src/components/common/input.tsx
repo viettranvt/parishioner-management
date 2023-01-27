@@ -9,6 +9,7 @@ export interface InputProps {
    type?: HTMLInputTypeAttribute;
    size?: 'small' | 'medium' | 'large';
    autofocus?: boolean;
+   required?: boolean;
 }
 
 export function Input({
@@ -17,10 +18,11 @@ export function Input({
    type = 'text',
    size = 'medium',
    autofocus = false,
+   required = false,
 }: InputProps) {
    return (
       <div className="form-control w-full">
-         {label !== undefined && <FormFieldLabel>{label}</FormFieldLabel>}
+         {label !== undefined && <FormFieldLabel required={required}>{label}</FormFieldLabel>}
          <input
             autoFocus={autofocus}
             type={type}
