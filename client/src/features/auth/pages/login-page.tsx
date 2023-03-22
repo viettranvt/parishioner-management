@@ -1,8 +1,23 @@
+import { useAppDispatch } from 'app/hooks';
 import { Button, Input } from 'components/common';
 import AppAssets from 'constants/app-assets';
 import AppConfig from 'constants/app-config';
+import { authActions } from 'features/auth/authSlice';
+import React from 'react';
 
 export default function LoginPage() {
+   const dispatch = useAppDispatch();
+
+   const onBtnLoginClicked = () => {
+      // TODO: get username & password from login form
+      dispatch(
+         authActions.login({
+            username: '',
+            password: '',
+         })
+      );
+   };
+
    return (
       <div
          className="h-screen relative"
@@ -29,13 +44,14 @@ export default function LoginPage() {
                   style={{ marginTop: '-2%' }}
                />
 
-               <form className="space-y-4">
+               <div className="space-y-4">
                   <Input label="Tên đăng nhập" placeholder="Nhập tên đăng nhập" autofocus />
 
                   <Input type="password" label="Mật khẩu" placeholder="Nhập mật khẩu" />
 
                   <div className="pt-3">
                      <Button
+                        onClick={onBtnLoginClicked}
                         type="primary"
                         className="bg-gradient-to-r from-primary-dark to-primary"
                         size="lg"
@@ -58,8 +74,10 @@ export default function LoginPage() {
                      >
                         ĐĂNG NHẬP
                      </Button>
+
+                     <Button onClick={() => dispatch(authActions.logout())}>Logout</Button>
                   </div>
-               </form>
+               </div>
             </div>
          </div>
       </div>

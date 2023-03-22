@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export interface ButtonProps {
+export type ButtonProps = {
    children?: ReactNode;
    type?: 'primary' | 'default';
    size?: 'sm' | 'md' | 'lg';
@@ -11,21 +11,25 @@ export interface ButtonProps {
    contrast?: boolean;
    shape?: 'square' | 'circle';
    className?: string;
-}
+   htmlType?: 'submit' | 'reset' | 'button';
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;
 
 export function Button({
    className,
    children,
    type = 'default',
+   htmlType,
    size = 'md',
    outlined = undefined,
    contrast = false,
    icon,
    shape = 'square',
+   ...rest
 }: ButtonProps) {
    if (shape === 'circle' && icon !== undefined) {
       return (
          <button
+            type={htmlType}
             className={twMerge(
                classNames(
                   `btn btn-circle btn-sm`,
@@ -39,6 +43,7 @@ export function Button({
                   className
                )
             )}
+            {...rest}
          >
             {icon}
          </button>
@@ -65,6 +70,7 @@ export function Button({
                className
             )
          )}
+         {...rest}
       >
          {icon !== undefined && children !== undefined && (
             <div className="flex justify-center items-center">
