@@ -2,8 +2,7 @@ import { useAppDispatch } from 'app/hooks';
 import { Button, Input } from 'components/common';
 import AppAssets from 'constants/app-assets';
 import AppConfig from 'constants/app-config';
-import { authActions } from 'features/auth/authSlice';
-import React from 'react';
+import { authActions } from 'features/auth/auth-slice';
 
 export default function LoginPage() {
    const dispatch = useAppDispatch();
@@ -74,8 +73,6 @@ export default function LoginPage() {
                      >
                         ĐĂNG NHẬP
                      </Button>
-
-                     <Button onClick={() => dispatch(authActions.logout())}>Logout</Button>
                   </div>
                </div>
             </div>

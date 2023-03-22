@@ -1,14 +1,14 @@
+import dateFnsVi from 'date-fns/locale/vi';
 import React from 'react';
+import { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { store } from './app/store';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { history, store } from './app/store';
 import './index.css';
-import { BrowserRouter } from 'react-router-dom';
-import 'react-datepicker/dist/react-datepicker.css';
-import dateFnsVi from 'date-fns/locale/vi';
-import { registerLocale } from 'react-datepicker';
+import reportWebVitals from './reportWebVitals';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -17,9 +17,9 @@ registerLocale('vi', dateFnsVi);
 root.render(
    <React.StrictMode>
       <Provider store={store}>
-         <BrowserRouter>
+         <Router history={history}>
             <App />
-         </BrowserRouter>
+         </Router>
       </Provider>
    </React.StrictMode>
 );
