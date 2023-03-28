@@ -9,3 +9,4 @@ export * from './more-vertical-icon';
 export * from './check-icon';
 export * from './arrow-left-icon';
 export * from './refresh-icon';
+export * from './security-icon';

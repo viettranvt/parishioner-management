@@ -1,7 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+import { authApi } from 'api';
+import { AxiosResponse } from 'axios';
 import { LocalStorageItem } from 'constants/local-storage';
 import { authActions } from 'features/auth/auth-slice';
-import { AuthLoginFormData } from 'models';
+import { AuthLoginFormData, AuthLoginResponseDTO } from 'models';
 import { push } from 'redux-first-history';
 import { delay, fork, take, call, put } from 'redux-saga/effects';
 
@@ -10,17 +12,19 @@ function* handleLogin(payload: AuthLoginFormData) {
 
    try {
       // call login api
-      yield delay(1000);
+      const {
+         data: { authInfo, token, refreshToken },
+      }: AxiosResponse<AuthLoginResponseDTO> = yield call(authApi.login, payload);
 
       // on login success
-      localStorage.setItem(LocalStorageItem.accessToken, 'fake_at');
+      localStorage.setItem(LocalStorageItem.accessToken, token);
       yield put(
          authActions.loginSuccess({
-            accessToken: 'fake_at',
-            refreshToken: 'fake_rf',
+            accessToken: token,
+            refreshToken: refreshToken,
             user: {
-               id: 1,
-               username: 'tuevo',
+               id: authInfo.id,
+               username: authInfo.username,
             },
          })
       );
@@ -28,6 +32,7 @@ function* handleLogin(payload: AuthLoginFormData) {
       // redirect to private page
       yield put(push('/'));
    } catch (error) {
+      // on login failed
       yield put(authActions.loginFailed('login failed'));
    }
 }

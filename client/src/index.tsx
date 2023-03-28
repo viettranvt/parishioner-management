@@ -1,3 +1,4 @@
+import { CssBaseline } from '@mui/material';
 import dateFnsVi from 'date-fns/locale/vi';
 import React from 'react';
 import { registerLocale } from 'react-datepicker';
@@ -18,6 +19,7 @@ root.render(
    <React.StrictMode>
       <Provider store={store}>
          <Router history={history}>
+            <CssBaseline />
             <App />
          </Router>
       </Provider>

@@ -9,7 +9,7 @@ export interface ProtectedProps {
 }
 
 export function Protected({ children }: ProtectedProps) {
-   const isLoggedIn = useAuth();
+   const { isLoggedIn } = useAuth();
    if (!isLoggedIn) {
       return <Navigate to={loginPage?.path || ''} replace />;
    }

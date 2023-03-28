@@ -30,7 +30,7 @@ export function PaginationButtons(props: PaginationButtonsProps) {
             <ul className="flex items-center gap-1">
                {pages.map((item, idx) => (
                   <li key={item} className="text-sm">
-                     {item == '...' ? (
+                     {item === '...' ? (
                         <div>{item}</div>
                      ) : (
                         <a
