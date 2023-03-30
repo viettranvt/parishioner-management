@@ -1,6 +1,5 @@
 import { CssBaseline } from '@mui/material';
 import dateFnsVi from 'date-fns/locale/vi';
-import React from 'react';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createRoot } from 'react-dom/client';
@@ -16,14 +15,12 @@ const root = createRoot(container);
 registerLocale('vi', dateFnsVi);
 
 root.render(
-   <React.StrictMode>
-      <Provider store={store}>
-         <Router history={history}>
-            <CssBaseline />
-            <App />
-         </Router>
-      </Provider>
-   </React.StrictMode>
+   <Provider store={store}>
+      <Router history={history}>
+         <CssBaseline />
+         <App />
+      </Router>
+   </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

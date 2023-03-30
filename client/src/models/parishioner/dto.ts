@@ -1,5 +1,11 @@
+import { ID } from 'models';
+
 export interface ParishionerBasicResponseDTO {
-   id: number;
+   id: ID;
+   fullName: string;
+   parishName: string;
+   christianName: string;
+   gender: number;
 }
 
 export interface PaginatedParishionerResponseDTO extends ParishionerBasicResponseDTO {}

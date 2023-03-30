@@ -4,6 +4,16 @@ import { ParishionerCard } from 'components';
 import { PaginationButtons } from 'components/tables/pagination-buttons';
 import { Link } from 'react-router-dom';
 import { PageId, Pages } from 'constants/pages';
+import { ParishionerBasicData } from 'models';
+import {
+   Paper,
+   Table,
+   TableBody,
+   TableCell,
+   TableContainer,
+   TableHead,
+   TableRow,
+} from '@mui/material';
 
 const tableItems = [
    {
@@ -98,12 +108,47 @@ const tableItems = [
    },
 ];
 
-export interface ParishionerTableProps {}
+export interface ParishionerTableProps {
+   parishioners: ParishionerBasicData[];
+}
 
-export function ParishionerTable(props: ParishionerTableProps) {
+export function ParishionerTable({ parishioners }: ParishionerTableProps) {
+   console.log(parishioners);
+
    return (
       <>
-         <div className="w-full shadow-sm border rounded-lg overflow-x-auto">
+         <TableContainer>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+               <TableHead>
+                  <TableRow>
+                     <TableCell>Họ tên</TableCell>
+                     <TableCell>Tên thánh</TableCell>
+                     <TableCell>Ngày sinh</TableCell>
+                     <TableCell>Giới tính</TableCell>
+                     <TableCell>Giáo họ</TableCell>
+                     <TableCell>Thao tác</TableCell>
+                  </TableRow>
+               </TableHead>
+               <TableBody>
+                  {parishioners.map((row) => (
+                     <TableRow
+                        key={row.id}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                     >
+                        <TableCell component="th" scope="row">
+                           {row.fullName}
+                        </TableCell>
+                        <TableCell>{row.christianName}</TableCell>
+                        <TableCell>Test</TableCell>
+                        <TableCell>{row.gender}</TableCell>
+                        <TableCell>{row.parishName}</TableCell>
+                        <TableCell>Actions</TableCell>
+                     </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
+         </TableContainer>
+         {/* <div className="w-full shadow-sm border rounded-lg overflow-x-auto">
             <table className="w-full table-auto text-sm text-left">
                <thead className="bg-gray-100 text-gray-600 font-medium border-b">
                   <tr>
@@ -153,7 +198,7 @@ export function ParishionerTable(props: ParishionerTableProps) {
          </div>
          <div className="mt-5">
             <PaginationButtons />
-         </div>
+         </div> */}
       </>
    );
 }

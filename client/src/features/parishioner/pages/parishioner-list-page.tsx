@@ -1,9 +1,25 @@
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Button, Divider } from 'components/common';
 import { ParishionerFilterForm } from 'components/forms';
 import { PlusIcon } from 'components/icons';
 import { ParishionerTable } from 'components/tables';
+import { parishionerActions, selectParishionerList } from 'features/parishioner/parishioner-slice';
+import { useEffect } from 'react';
 
 export default function ParishionerListPage() {
+   const dispatch = useAppDispatch();
+   const parishioners = useAppSelector(selectParishionerList) || [];
+   console.log(parishioners);
+
+   useEffect(() => {
+      dispatch(
+         parishionerActions.fetchParishionerList({
+            page: 1,
+            limit: 10,
+         })
+      );
+   }, [dispatch]);
+
    return (
       <>
          <div className="flex justify-between">
@@ -32,7 +48,7 @@ export default function ParishionerListPage() {
                   </div>
                </div>
                <div className="col-span-3">
-                  <ParishionerTable />
+                  <ParishionerTable parishioners={parishioners} />
                </div>
             </div>
          </div>

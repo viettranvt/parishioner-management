@@ -1,10 +1,12 @@
+import { ID } from 'models/common';
+
 export interface AuthLoginFormData {
    username: string;
    password: string;
 }
 
 export interface AuthUserData {
-   id: number | string;
+   id: ID;
    username: string;
 }
 
