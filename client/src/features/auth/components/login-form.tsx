@@ -41,6 +41,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
             label="Tên đăng nhập"
             placeholder="Nhập tên đăng nhập"
             autoFocus
+            customSize="medium"
          />
 
          <InputField
@@ -49,6 +50,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
             label="Mật khẩu"
             placeholder="Nhập mật khẩu"
             type="password"
+            customSize="medium"
          />
 
          <div>

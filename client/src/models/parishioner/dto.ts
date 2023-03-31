@@ -6,6 +6,7 @@ export interface ParishionerBasicResponseDTO {
    parishName: string;
    christianName: string;
    gender: number;
+   dateOfBirth?: string;
 }
 
 export interface PaginatedParishionerResponseDTO extends ParishionerBasicResponseDTO {}

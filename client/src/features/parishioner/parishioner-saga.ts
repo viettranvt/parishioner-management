@@ -10,8 +10,6 @@ function* fetchParishionerList(action: PayloadAction<PaginatedListParams>) {
          parishionerApi.getList,
          action.payload
       );
-      console.log(response);
-
       yield put(parishionerActions.fetchParishionerListSuccess(response));
    } catch (error) {
       console.log('Failed to fetch parishioner list:', error);

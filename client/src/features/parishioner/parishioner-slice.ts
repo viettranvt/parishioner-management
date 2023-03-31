@@ -9,8 +9,9 @@ import {
 
 export interface ParishionerState {
    loading: boolean;
-   list?: ParishionerBasicData[];
-   pagination?: PaginationResponse;
+   list: ParishionerBasicData[];
+   pagination: PaginationResponse;
+   filter: PaginatedListParams;
 }
 
 const initialState: ParishionerState = {
@@ -20,6 +21,10 @@ const initialState: ParishionerState = {
       page: 1,
       limit: 10,
       total: 0,
+   },
+   filter: {
+      page: 1,
+      limit: 20,
    },
 };
 
@@ -42,7 +47,9 @@ const parishionerSlice = createSlice({
          state.loading = false;
       },
 
-      setFilter(state, action) {},
+      setFilter(state, action: PayloadAction<PaginatedListParams>) {
+         state.filter = action.payload;
+      },
    },
 });
 
@@ -51,8 +58,9 @@ export const parishionerActions = parishionerSlice.actions;
 
 // selectors
 export const selectParishionerList = (state: RootState) => state.parishioner.list;
-export const selectLoading = (state: RootState) => state.parishioner.loading;
-export const selectPagination = (state: RootState) => state.parishioner.pagination;
+export const selectParishionerLoading = (state: RootState) => state.parishioner.loading;
+export const selectParishionerPagination = (state: RootState) => state.parishioner.pagination;
+export const selectParishionerFilter = (state: RootState) => state.parishioner.filter;
 
 // reducer
 const parishionerReducer = parishionerSlice.reducer;

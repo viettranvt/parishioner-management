@@ -5,6 +5,7 @@ import {
    PaginatedListResponse,
    PaginatedParishionerResponseDTO,
 } from 'models';
+import ParamUtils from 'utils/param';
 
 const resourcePath = `${ResourcePaths.parishioner}`;
 
@@ -13,6 +14,8 @@ export const parishionerApi = {
       params: PaginatedListParams
    ): Promise<PaginatedListResponse<PaginatedParishionerResponseDTO>> {
       const url = `${resourcePath}/list`;
-      return axiosClient.get(url, { params });
+      return axiosClient.get(url, {
+         params: ParamUtils.toApiParams(params),
+      });
    },
 };

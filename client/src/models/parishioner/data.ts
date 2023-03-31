@@ -7,4 +7,10 @@ export interface ParishionerBasicData {
    parishName: string;
    christianName: string;
    gender: Gender;
+   dateOfBirth?: string;
+}
+
+export interface ParishionerFilterFormData {
+   fullName?: string;
+   christianNames?: string[];
 }

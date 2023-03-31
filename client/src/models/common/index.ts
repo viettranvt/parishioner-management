@@ -9,9 +9,39 @@ export interface PaginationResponse {
    total: number;
 }
 
-export interface PaginatedListParams {
+export interface ApiParams {
+   filters?: FilterCondition[];
+   sort?: SortCondition;
+}
+
+export interface PaginatedListParams extends ApiParams {
    page: number;
    limit: number;
+}
+
+export enum Op {
+   StartWith = 'begin',
+   EndWith = 'end',
+   Greater = 'gt',
+   Less = 'lt',
+   Equal = 'eq',
+   GreaterEqual = 'gte',
+   LessEqual = 'lte',
+   NotEqual = 'ne',
+   In = 'in',
+   Like = 'like',
+   Between = 'btw',
+}
+
+export interface FilterCondition {
+   field: string;
+   op: Op;
+   val: string[];
+}
+
+export interface SortCondition {
+   field: string;
+   asc: boolean;
 }
 
 export type ID = string;

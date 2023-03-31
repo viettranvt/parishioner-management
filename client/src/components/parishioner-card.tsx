@@ -31,7 +31,18 @@ function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
                'p-1': style === ParishionerCardStyle.actions,
             })}
          >
-            <Avatar name={fullName} src={avatar} size={hasTitle ? '36' : '28'} round />
+            <Avatar
+               name={fullName}
+               src={avatar}
+               size={hasTitle ? '36' : '28'}
+               round
+               initials={(name) => {
+                  const partials = name.split(' ').slice(-2);
+                  return `${partials[0].charAt(0)}${
+                     partials.length > 1 ? partials[1].charAt(0) : ''
+                  }`;
+               }}
+            />
          </div>
          <div className="flex flex-col">
             <span

@@ -1,204 +1,97 @@
-import { Button } from 'components/common';
-import { DeleteIcon, EditIcon, SearchIcon } from 'components/icons';
-import { ParishionerCard } from 'components';
-import { PaginationButtons } from 'components/tables/pagination-buttons';
-import { Link } from 'react-router-dom';
-import { PageId, Pages } from 'constants/pages';
-import { ParishionerBasicData } from 'models';
+import { ArrowForward, Delete, Edit } from '@mui/icons-material';
 import {
-   Paper,
+   IconButton,
+   styled,
    Table,
    TableBody,
    TableCell,
+   tableCellClasses,
    TableContainer,
    TableHead,
    TableRow,
+   Typography,
 } from '@mui/material';
-
-const tableItems = [
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-   {
-      avatar:
-         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      fullName: 'Nguyễn Văn A',
-      holyName: 'Joseph',
-      birthDate: '03/12/1998',
-      gender: 'Nam',
-      parishName: 'Thánh Tuân',
-   },
-];
+import { ParishionerCard } from 'components';
+import { Gender } from 'constants/gender';
+import { ParishionerBasicData } from 'models';
+import moment from 'moment';
 
 export interface ParishionerTableProps {
    parishioners: ParishionerBasicData[];
+   page?: number;
 }
 
-export function ParishionerTable({ parishioners }: ParishionerTableProps) {
-   console.log(parishioners);
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+   [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.grey[50],
+      fontWeight: 600,
+   },
+}));
 
+export function ParishionerTable({ parishioners, page = 1 }: ParishionerTableProps) {
    return (
       <>
-         <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+         <TableContainer sx={{ height: 500 }}>
+            <Table sx={{ minWidth: 650 }} size="small" stickyHeader>
                <TableHead>
                   <TableRow>
-                     <TableCell>Họ tên</TableCell>
-                     <TableCell>Tên thánh</TableCell>
-                     <TableCell>Ngày sinh</TableCell>
-                     <TableCell>Giới tính</TableCell>
-                     <TableCell>Giáo họ</TableCell>
-                     <TableCell>Thao tác</TableCell>
+                     <StyledTableCell align="center">STT</StyledTableCell>
+                     <StyledTableCell>Họ tên</StyledTableCell>
+                     <StyledTableCell>Tên thánh</StyledTableCell>
+                     <StyledTableCell>Ngày sinh</StyledTableCell>
+                     <StyledTableCell>Giới tính</StyledTableCell>
+                     <StyledTableCell>Giáo họ</StyledTableCell>
+                     <StyledTableCell></StyledTableCell>
                   </TableRow>
                </TableHead>
                <TableBody>
-                  {parishioners.map((row) => (
-                     <TableRow
-                        key={row.id}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                     >
-                        <TableCell component="th" scope="row">
-                           {row.fullName}
-                        </TableCell>
-                        <TableCell>{row.christianName}</TableCell>
-                        <TableCell>Test</TableCell>
-                        <TableCell>{row.gender}</TableCell>
-                        <TableCell>{row.parishName}</TableCell>
-                        <TableCell>Actions</TableCell>
-                     </TableRow>
-                  ))}
+                  {parishioners.map((row, idx) => {
+                     const { dateOfBirth } = row;
+                     return (
+                        <TableRow
+                           key={row.id}
+                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                           hover
+                           onClick={(e) => {
+                              console.log(e);
+                           }}
+                        >
+                           <TableCell align="center">{(page - 1) * 10 + idx + 1}</TableCell>
+                           <TableCell>
+                              {' '}
+                              <ParishionerCard fullName={row.fullName} />
+                           </TableCell>
+                           <TableCell>{row.christianName}</TableCell>
+                           <TableCell>
+                              {dateOfBirth ? (
+                                 moment(dateOfBirth).format('DD/MM/YYYY')
+                              ) : (
+                                 <Typography variant="caption" display="block" gutterBottom>
+                                    Chưa xác định
+                                 </Typography>
+                              )}
+                           </TableCell>
+                           <TableCell>{row.gender === Gender.Male ? 'Nam' : 'Nữ'}</TableCell>
+                           <TableCell>{row.parishName}</TableCell>
+                           <TableCell align="right">
+                              <div className="flex justify-end gap-4">
+                                 <IconButton size="small">
+                                    <Edit fontSize="small" />
+                                 </IconButton>
+                                 <IconButton size="small">
+                                    <Delete fontSize="small" />
+                                 </IconButton>
+                                 <IconButton size="small">
+                                    <ArrowForward fontSize="small" />
+                                 </IconButton>
+                              </div>
+                           </TableCell>
+                        </TableRow>
+                     );
+                  })}
                </TableBody>
             </Table>
          </TableContainer>
-         {/* <div className="w-full shadow-sm border rounded-lg overflow-x-auto">
-            <table className="w-full table-auto text-sm text-left">
-               <thead className="bg-gray-100 text-gray-600 font-medium border-b">
-                  <tr>
-                     <th className="py-3 px-4 text-center">#</th>
-                     <th className="py-3 px-4">Họ tên</th>
-                     <th className="py-3 px-4">Tên thánh</th>
-                     <th className="py-3 px-4">Ngày sinh</th>
-                     <th className="py-3 px-4">Giới tính</th>
-                     <th className="py-3 px-4">Giáo họ</th>
-                     <th className="py-3 px-4">Thao tác</th>
-                  </tr>
-               </thead>
-               <tbody className="text-gray-600 divide-y">
-                  {tableItems.map((item, idx) => (
-                     <tr key={idx} className="hover:bg-primary-light duration-150 even:bg-gray-50">
-                        <td className="px-4 py-2.5 whitespace-nowrap text-center">{idx + 1}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                           <ParishionerCard avatar={item.avatar} fullName={item.fullName} />
-                        </td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">{item.holyName}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">{item.birthDate}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">{item.gender}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">{item.parishName}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                           <div className="flex gap-2">
-                              <Link to={Pages.get(PageId.parishionerDetail)?.path ?? ''}>
-                                 <Button size="sm" icon={<SearchIcon className="w3 h-3" />}>
-                                    Chi tiết
-                                 </Button>
-                              </Link>
-
-                              <Link to={Pages.get(PageId.parishionerDetail)?.path ?? ''}>
-                                 <Button size="sm" icon={<EditIcon className="w3 h-3" />}>
-                                    Sửa
-                                 </Button>
-                              </Link>
-
-                              <Button size="sm" icon={<DeleteIcon className="w3 h-3" />}>
-                                 Xoá
-                              </Button>
-                           </div>
-                        </td>
-                     </tr>
-                  ))}
-               </tbody>
-            </table>
-         </div>
-         <div className="mt-5">
-            <PaginationButtons />
-         </div> */}
       </>
    );
 }
