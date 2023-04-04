@@ -19,6 +19,7 @@ import moment from 'moment';
 export interface ParishionerTableProps {
    parishioners: ParishionerBasicData[];
    page?: number;
+   limit?: number;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -28,7 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
    },
 }));
 
-export function ParishionerTable({ parishioners, page = 1 }: ParishionerTableProps) {
+export function ParishionerTable({ parishioners, page = 1, limit = 10 }: ParishionerTableProps) {
    return (
       <>
          <TableContainer sx={{ height: 500 }}>
@@ -56,7 +57,7 @@ export function ParishionerTable({ parishioners, page = 1 }: ParishionerTablePro
                               console.log(e);
                            }}
                         >
-                           <TableCell align="center">{(page - 1) * 10 + idx + 1}</TableCell>
+                           <TableCell align="center">{(page - 1) * limit + idx + 1}</TableCell>
                            <TableCell>
                               {' '}
                               <ParishionerCard fullName={row.fullName} />

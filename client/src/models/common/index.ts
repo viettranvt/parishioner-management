@@ -14,6 +14,11 @@ export interface ApiParams {
    sort?: SortCondition;
 }
 
+export interface DateRange {
+   startDate: Date;
+   endDate: Date;
+}
+
 export interface PaginatedListParams extends ApiParams {
    page: number;
    limit: number;

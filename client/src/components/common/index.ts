@@ -9,3 +9,4 @@ export * from './radio';
 export * from './form-field-label';
 export * from './text-area';
 export * from './dropdown';
+export * from './date-range-picker';

@@ -4,6 +4,7 @@ import { Button } from 'components/common';
 import { ParishionerFilterForm } from 'components/forms';
 import { PlusIcon } from 'components/icons';
 import { ParishionerTable } from 'components/tables';
+import { ApiParamField } from 'constants/api';
 import {
    parishionerActions,
    selectParishionerFilter,
@@ -11,15 +12,9 @@ import {
    selectParishionerLoading,
    selectParishionerPagination,
 } from 'features/parishioner/parishioner-slice';
-import { FilterCondition, Op, ParishionerFilterFormData } from 'models';
+import { Op, ParishionerFilterFormData } from 'models';
 import { ChangeEvent, useEffect } from 'react';
-
-type GetNewFilterFieldValue = string | string[] | undefined;
-interface GetNewFilterField<T extends GetNewFilterFieldValue> {
-   field: string;
-   op: Op;
-   val?: T;
-}
+import ParamUtils, { FilterValue } from 'utils/param';
 
 export default function ParishionerListPage() {
    const dispatch = useAppDispatch();
@@ -37,49 +32,47 @@ export default function ParishionerListPage() {
       );
    };
 
-   const getNewFilters = <T extends GetNewFilterFieldValue>(
-      fields: GetNewFilterField<T>[]
-   ): FilterCondition[] => {
-      const filters = [...(filter.filters || [])];
-
-      fields.forEach((field) => {
-         const { val } = field;
-         const index = filters.findIndex((f) => f.field === field.field);
-
-         if (val) {
-            const newVal: string[] = Array.isArray(val) ? val : [val];
-
-            if (index > -1) {
-               filters[index] = { ...filters[index], val: newVal };
-            } else {
-               filters.push({
-                  field: field.field,
-                  op: field.op,
-                  val: newVal,
-               });
-            }
-         } else {
-            filters.splice(index, 1);
-         }
-      });
-
-      return filters;
-   };
-
    const handleFilterSubmit = (filterData: ParishionerFilterFormData) => {
-      const { fullName, christianNames } = filterData;
-      const filters = getNewFilters<typeof fullName | typeof christianNames>([
-         {
-            field: 'full_name',
-            op: Op.Like,
-            val: fullName,
-         },
-         {
-            field: 'christian_name',
-            op: Op.In,
-            val: christianNames,
-         },
-      ]);
+      const {
+         fullName,
+         christianNames,
+         baptismDateRange,
+         firstCommunicationDateRange,
+         confirmationDateRange,
+         weddingDateRange,
+      } = filterData;
+      const filters = ParamUtils.createFilters<FilterValue>(
+         [
+            {
+               field: ApiParamField.fullName,
+               op: Op.Like,
+               val: fullName,
+            },
+            {
+               field: ApiParamField.christianName,
+               op: Op.In,
+               val: christianNames,
+            },
+            ParamUtils.createDateRangeFilter({
+               field: ApiParamField.dateOfBaptism,
+               dateRange: baptismDateRange,
+            }),
+            ParamUtils.createDateRangeFilter({
+               field: ApiParamField.dateOfFirstCommunication,
+               dateRange: firstCommunicationDateRange,
+            }),
+            ParamUtils.createDateRangeFilter({
+               field: ApiParamField.dateOfConfirmation,
+               dateRange: confirmationDateRange,
+            }),
+            ParamUtils.createDateRangeFilter({
+               field: ApiParamField.dateOfWedding,
+               dateRange: weddingDateRange,
+            }),
+         ],
+         filter.filters
+      );
+
       dispatch(
          parishionerActions.setFilter({
             ...filter,
@@ -126,7 +119,11 @@ export default function ParishionerListPage() {
                   </div>
                </div>
                <div className="col-span-3">
-                  <ParishionerTable parishioners={parishioners} page={pagination.page} />
+                  <ParishionerTable
+                     parishioners={parishioners}
+                     page={pagination.page}
+                     limit={pagination.limit}
+                  />
                   <div className="flex justify-center mt-5">
                      <Pagination
                         count={Math.ceil(pagination.total / pagination.limit)}

@@ -9,6 +9,8 @@ import App from './App';
 import { history, store } from './app/store';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

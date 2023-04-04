@@ -1,5 +1,5 @@
 import { Gender } from 'constants/gender';
-import { ID } from 'models';
+import { DateRange, ID } from 'models';
 
 export interface ParishionerBasicData {
    id: ID;
@@ -13,4 +13,8 @@ export interface ParishionerBasicData {
 export interface ParishionerFilterFormData {
    fullName?: string;
    christianNames?: string[];
+   baptismDateRange?: DateRange;
+   firstCommunicationDateRange?: DateRange;
+   confirmationDateRange?: DateRange;
+   weddingDateRange?: DateRange;
 }
