@@ -2,7 +2,7 @@ import { PageId, Pages } from 'constants/pages';
 import { useAuth } from 'hooks';
 import { Navigate } from 'react-router-dom';
 
-const loginPage = Pages.get(PageId.login);
+const LoginPage = Pages.get(PageId.Login);
 
 export interface ProtectedProps {
    children: JSX.Element;
@@ -11,7 +11,7 @@ export interface ProtectedProps {
 export function Protected({ children }: ProtectedProps) {
    const { isLoggedIn } = useAuth();
    if (!isLoggedIn) {
-      return <Navigate to={loginPage?.path || ''} replace />;
+      return <Navigate to={LoginPage?.path || ''} replace />;
    }
 
    return children;

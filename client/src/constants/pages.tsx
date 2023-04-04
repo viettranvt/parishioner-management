@@ -1,13 +1,12 @@
 import LoginPage from 'features/auth/pages/login-page';
-import DashboardPage from 'features/dashboard/pages/dashboard-page';
 import ParishionerDetailPage from 'features/parishioner/pages/parishioner-detail-page';
 import ParishionerListPage from 'features/parishioner/pages/parishioner-list-page';
 
 export enum PageId {
-   login,
-   dashboard,
-   parishionerList,
-   parishionerDetail,
+   Login,
+   Dashboard,
+   ParishionerList,
+   ParishionerDetail,
 }
 
 export interface PageConfig {
@@ -22,11 +21,11 @@ export interface PageConfig {
 }
 
 export const Pages = new Map<PageId, PageConfig>([
-   [PageId.login, { id: PageId.login, path: '/dang-nhap', element: <LoginPage /> }],
+   [PageId.Login, { id: PageId.Login, path: '/dang-nhap', element: <LoginPage /> }],
    // [
-   //    PageId.dashboard,
+   //    PageId.Dashboard,
    //    {
-   //       id: PageId.dashboard,
+   //       id: PageId.Dashboard,
    //       path: '/tong-quan',
    //       element: <DashboardPage />,
    //       isPrivate: true,
@@ -36,9 +35,9 @@ export const Pages = new Map<PageId, PageConfig>([
    //    },
    // ],
    [
-      PageId.parishionerList,
+      PageId.ParishionerList,
       {
-         id: PageId.parishionerList,
+         id: PageId.ParishionerList,
          title: 'Danh sách giáo dân',
          path: '/danh-sach-giao-dan',
          element: <ParishionerListPage />,
@@ -48,14 +47,14 @@ export const Pages = new Map<PageId, PageConfig>([
       },
    ],
    [
-      PageId.parishionerDetail,
+      PageId.ParishionerDetail,
       {
-         id: PageId.parishionerDetail,
+         id: PageId.ParishionerDetail,
          title: 'Thông tin giáo dân',
          path: '/giao-dan/:id',
          element: <ParishionerDetailPage />,
          isPrivate: true,
-         relatedPageId: PageId.parishionerList,
+         relatedPageId: PageId.ParishionerList,
       },
    ],
 ]);

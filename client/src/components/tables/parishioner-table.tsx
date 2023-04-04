@@ -11,8 +11,11 @@ import {
    TableRow,
    Typography,
 } from '@mui/material';
+import { history } from 'app/store';
 import { ParishionerCard } from 'components';
 import { Gender } from 'constants/gender';
+import { PageId, Pages } from 'constants/pages';
+import { DateFormat } from 'constants/strings';
 import { ParishionerBasicData } from 'models';
 import moment from 'moment';
 
@@ -30,6 +33,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 export function ParishionerTable({ parishioners, page = 1, limit = 10 }: ParishionerTableProps) {
+   const handleRowClick = (data: ParishionerBasicData) => {
+      history.push((Pages.get(PageId.ParishionerDetail)?.path ?? '').replace(':id', data.id));
+   };
+
    return (
       <>
          <TableContainer sx={{ height: 500 }}>
@@ -53,9 +60,7 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
                            key={row.id}
                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                            hover
-                           onClick={(e) => {
-                              console.log(e);
-                           }}
+                           onClick={() => handleRowClick(row)}
                         >
                            <TableCell align="center">{(page - 1) * limit + idx + 1}</TableCell>
                            <TableCell>
@@ -65,7 +70,7 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
                            <TableCell>{row.christianName}</TableCell>
                            <TableCell>
                               {dateOfBirth ? (
-                                 moment(dateOfBirth).format('DD/MM/YYYY')
+                                 moment(dateOfBirth).format(DateFormat)
                               ) : (
                                  <Typography variant="caption" display="block" gutterBottom>
                                     Chưa xác định

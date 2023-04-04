@@ -7,6 +7,8 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
    control: Control<any>;
    label?: string;
    customSize?: 'small' | 'medium';
+   rows?: number;
+   multiline?: boolean;
 }
 
 export function InputField({
@@ -14,6 +16,8 @@ export function InputField({
    control,
    label,
    customSize = 'small',
+   rows,
+   multiline = false,
    ...inputProps
 }: InputFieldProps) {
    const {
@@ -26,6 +30,7 @@ export function InputField({
 
    return (
       <TextField
+         InputLabelProps={{ shrink: true }}
          size={customSize}
          fullWidth
          label={label}
@@ -37,6 +42,8 @@ export function InputField({
          helperText={error?.message}
          inputProps={inputProps}
          variant="outlined"
+         multiline={multiline}
+         rows={rows}
       />
    );
 }

@@ -11,6 +11,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -18,10 +20,12 @@ registerLocale('vi', dateFnsVi);
 
 root.render(
    <Provider store={store}>
-      <Router history={history}>
-         <CssBaseline />
-         <App />
-      </Router>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+         <Router history={history}>
+            <CssBaseline />
+            <App />
+         </Router>
+      </LocalizationProvider>
    </Provider>
 );
 

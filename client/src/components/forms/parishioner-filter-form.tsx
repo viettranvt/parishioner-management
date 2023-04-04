@@ -15,7 +15,6 @@ import { DateRangeField, InputField } from 'components/forms/fields';
 import { FilterIcon } from 'components/icons';
 import { FemaleChristianNames, MaleChristianNames } from 'constants/strings';
 import { DateRange, ParishionerFilterFormData } from 'models';
-import moment from 'moment';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -30,7 +29,7 @@ const MenuProps = {
    },
 };
 
-function getStyles(name: string, personName: string[], theme: Theme) {
+function getChristianNameSelectStyles(name: string, personName: string[], theme: Theme) {
    return {
       fontWeight:
          personName.indexOf(name) === -1
@@ -125,7 +124,7 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
                      <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, christianNames, theme)}
+                        style={getChristianNameSelectStyles(name, christianNames, theme)}
                      >
                         {name}
                      </MenuItem>
@@ -135,7 +134,7 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
                      <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, christianNames, theme)}
+                        style={getChristianNameSelectStyles(name, christianNames, theme)}
                      >
                         {name}
                      </MenuItem>

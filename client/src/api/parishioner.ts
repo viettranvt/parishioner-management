@@ -1,9 +1,11 @@
 import axiosClient from 'api/axios-client';
 import { ResourcePaths } from 'constants/api';
 import {
+   ID,
    PaginatedListParams,
    PaginatedListResponse,
    PaginatedParishionerResponseDTO,
+   ParishionerDetailResponseDTO,
 } from 'models';
 import ParamUtils from 'utils/param';
 
@@ -17,5 +19,9 @@ export const parishionerApi = {
       return axiosClient.get(url, {
          params: ParamUtils.toApiParams(params),
       });
+   },
+   getDetail(id: ID): Promise<ParishionerDetailResponseDTO> {
+      const url = `${resourcePath}/detail/${id}`;
+      return axiosClient.get(url);
    },
 };

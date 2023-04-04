@@ -10,6 +10,7 @@ import {
    OutlinedInput,
 } from '@mui/material';
 import { DateRangePicker, DateRangePickerDates } from 'components/common';
+import { DateFormat } from 'constants/strings';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -56,7 +57,7 @@ export function DateRangeField({
       const endDate = dates?.endDate;
       setText(
          startDate && endDate
-            ? `${moment(startDate).format('DD/MM/YYYY')} - ${moment(endDate).format('DD/MM/YYYY')}`
+            ? `${moment(startDate).format(DateFormat)} - ${moment(endDate).format(DateFormat)}`
             : ''
       );
    }, []);

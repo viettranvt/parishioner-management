@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 import {
+   ID,
    PaginatedListParams,
    PaginatedListResponse,
    PaginationResponse,
    ParishionerBasicData,
+   ParishionerDetailData,
 } from 'models';
 
 export interface ParishionerState {
@@ -12,6 +14,7 @@ export interface ParishionerState {
    list: ParishionerBasicData[];
    pagination: PaginationResponse;
    filter: PaginatedListParams;
+   detail?: ParishionerDetailData;
 }
 
 const initialState: ParishionerState = {
@@ -46,6 +49,16 @@ const parishionerSlice = createSlice({
       fetchParishionerListFailed(state) {
          state.loading = false;
       },
+      fetchParishionerDetail(state, action: PayloadAction<ID>) {
+         state.loading = true;
+      },
+      fetchParishionerDetailSuccess(state, action: PayloadAction<ParishionerDetailData>) {
+         state.loading = false;
+         state.detail = action.payload;
+      },
+      fetchParishionerDetailFailed(state) {
+         state.loading = false;
+      },
 
       setFilter(state, action: PayloadAction<PaginatedListParams>) {
          state.filter = action.payload;
@@ -61,6 +74,7 @@ export const selectParishionerList = (state: RootState) => state.parishioner.lis
 export const selectParishionerLoading = (state: RootState) => state.parishioner.loading;
 export const selectParishionerPagination = (state: RootState) => state.parishioner.pagination;
 export const selectParishionerFilter = (state: RootState) => state.parishioner.filter;
+export const selectParishionerDetail = (state: RootState) => state.parishioner.detail;
 
 // reducer
 const parishionerReducer = parishionerSlice.reducer;

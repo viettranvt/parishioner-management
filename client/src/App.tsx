@@ -3,17 +3,17 @@ import { AdminLayout } from 'components/layouts';
 import { PageId, Pages } from 'constants/pages';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-const privatePages = Array.from(Pages.values()).filter((p) => p.isPrivate);
-const loginPage = Pages.get(PageId.login);
-const homePage = Pages.get(PageId.parishionerList);
+const PrivatePages = Array.from(Pages.values()).filter((p) => p.isPrivate);
+const LoginPage = Pages.get(PageId.Login);
+const HomePage = Pages.get(PageId.ParishionerList);
 
 function App() {
    return (
       <Routes>
-         <Route path="/" element={<Navigate to={homePage?.path ?? loginPage?.path ?? '/'} />} />
-         <Route path={loginPage?.path} element={loginPage?.element} />
+         <Route path="/" element={<Navigate to={HomePage?.path ?? LoginPage?.path ?? '/'} />} />
+         <Route path={LoginPage?.path} element={LoginPage?.element} />
 
-         {privatePages.map((p) => (
+         {PrivatePages.map((p) => (
             <Route
                key={p.path}
                path={p.path}
