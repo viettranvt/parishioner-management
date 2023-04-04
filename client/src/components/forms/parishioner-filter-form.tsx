@@ -15,6 +15,7 @@ import { DateRangeField, InputField } from 'components/forms/fields';
 import { FilterIcon } from 'components/icons';
 import { FemaleChristianNames, MaleChristianNames } from 'constants/strings';
 import { DateRange, ParishionerFilterFormData } from 'models';
+import moment from 'moment';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 

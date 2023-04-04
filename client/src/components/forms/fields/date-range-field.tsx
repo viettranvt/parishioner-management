@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { DateRangePicker, DateRangePickerDates } from 'components/common';
 import moment from 'moment';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const pickerContentStyle = {
    position: 'absolute' as 'absolute',
@@ -51,17 +51,27 @@ export function DateRangeField({
       setShowPicker(false);
    };
 
-   const handleSubmitPicker = () => {
-      const startDate = selectedDateRange?.startDate;
-      const endDate = selectedDateRange?.endDate;
+   const updateText = useCallback((dates: Partial<DateRangePickerDates>) => {
+      const startDate = dates?.startDate;
+      const endDate = dates?.endDate;
       setText(
          startDate && endDate
             ? `${moment(startDate).format('DD/MM/YYYY')} - ${moment(endDate).format('DD/MM/YYYY')}`
             : ''
       );
+   }, []);
+
+   const handleSubmitPicker = () => {
+      const startDate = selectedDateRange?.startDate;
+      const endDate = selectedDateRange?.endDate;
+      updateText({ startDate, endDate });
       onChange?.(selectedDateRange);
       closePicker();
    };
+
+   useEffect(() => {
+      updateText({ ...initialValues });
+   }, [initialValues, updateText]);
 
    return (
       <>
