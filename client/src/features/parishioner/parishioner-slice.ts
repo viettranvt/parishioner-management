@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
+import { ApiParamField } from 'constants/api';
 import {
    ID,
    PaginatedListParams,
    PaginatedListResponse,
    PaginationResponse,
    ParishionerBasicData,
+   ParishionerCreateRequestDTO,
    ParishionerDetailData,
    ParishionerUpdateRequestDTO,
 } from 'models';
@@ -29,6 +31,12 @@ const initialState: ParishionerState = {
    filter: {
       page: 1,
       limit: 20,
+      sorts: [
+         {
+            field: ApiParamField.createdAt,
+            asc: false,
+         },
+      ],
    },
 };
 
@@ -67,6 +75,15 @@ const parishionerSlice = createSlice({
          state.loading = false;
       },
       updateParishionerFailed(state) {
+         state.loading = false;
+      },
+      createParishioner(state, action: PayloadAction<ParishionerCreateRequestDTO>) {
+         state.loading = true;
+      },
+      createParishionerSuccess(state) {
+         state.loading = false;
+      },
+      createParishionerFailed(state) {
          state.loading = false;
       },
 

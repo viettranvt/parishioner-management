@@ -5,6 +5,7 @@ import {
    PaginatedListParams,
    PaginatedListResponse,
    PaginatedParishionerResponseDTO,
+   ParishionerCreateRequestDTO,
    ParishionerDetailResponseDTO,
    ParishionerUpdateRequestDTO,
 } from 'models';
@@ -25,6 +26,10 @@ export const parishionerApi = {
    getDetail(id: ID): Promise<ParishionerDetailResponseDTO> {
       const url = `${resourcePath}/detail/${id}`;
       return axiosClient.get(url);
+   },
+   create(payload: ParishionerCreateRequestDTO) {
+      const url = `${resourcePath}/new`;
+      return axiosClient.post(url, snakecaseKeys(payload));
    },
    update(payload: ParishionerUpdateRequestDTO) {
       const url = `${resourcePath}/update`;

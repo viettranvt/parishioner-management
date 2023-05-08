@@ -3,6 +3,7 @@ import camelcaseKeys from 'camelcase-keys';
 import AppConfig from 'constants/app-config';
 import { LocalStorageItem } from 'constants/local-storage';
 import qs from 'qs';
+import snakecaseKeys from 'snakecase-keys';
 
 const axiosClient = axios.create({
    baseURL: AppConfig.apiEndpoint,
@@ -10,7 +11,7 @@ const axiosClient = axios.create({
       'Content-Type': 'application/json',
    },
    paramsSerializer: {
-      serialize: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      serialize: (params) => qs.stringify(snakecaseKeys(params), { arrayFormat: 'repeat' }),
    },
 });
 

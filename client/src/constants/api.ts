@@ -17,4 +17,5 @@ export enum ApiParamField {
    dateOfFirstCommunion = 'date_of_first_communication',
    dateOfConfirmation = 'date_of_confirmation',
    dateOfWedding = 'date_of_wedding',
+   createdAt = 'created_at',
 }

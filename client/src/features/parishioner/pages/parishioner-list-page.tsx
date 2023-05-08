@@ -1,10 +1,12 @@
 import { Pagination } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { history } from 'app/store';
 import { Button } from 'components/common';
 import { ParishionerFilterForm } from 'components/forms';
 import { PlusIcon } from 'components/icons';
 import { ParishionerTable } from 'components/tables';
 import { ApiParamField } from 'constants/api';
+import { PageId, Pages } from 'constants/pages';
 import {
    parishionerActions,
    selectParishionerFilter,
@@ -82,13 +84,17 @@ export default function ParishionerListPage() {
       );
    };
 
+   const handleAddParishioner = () => {
+      history.push(Pages.get(PageId.ParishionerCreating)?.path ?? '');
+   };
+
    useEffect(() => {
       dispatch(
          parishionerActions.fetchParishionerList({
             page: filter.page,
             limit: filter.limit,
             filters: filter.filters,
-            sort: filter.sort,
+            sorts: filter.sorts,
          })
       );
    }, [dispatch, filter]);
@@ -106,7 +112,13 @@ export default function ParishionerListPage() {
                </p>
             </div>
             <div>
-               <Button icon={<PlusIcon className="w-5 h-5" />} type="primary" outlined contrast>
+               <Button
+                  icon={<PlusIcon className="w-5 h-5" />}
+                  type="primary"
+                  outlined
+                  contrast
+                  onClick={handleAddParishioner}
+               >
                   Thêm mới
                </Button>
             </div>

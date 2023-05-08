@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { ParishionerCard, ParishionerCardStyle } from 'components';
 import { Button, FormFieldLabel } from 'components/common';
 import { DateField, InputField, RadioField, SelectField } from 'components/forms/fields';
 import { ArrowLeftIcon, CheckIcon, PlusIcon, RefreshIcon } from 'components/icons';
+import { ParishionerCard, ParishionerCardStyle } from 'components/parishioner-card';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
 import { MaleChristianNames, ParishNames, Paths } from 'constants/strings';
@@ -11,53 +11,75 @@ import {
    parishionerActions,
    selectParishionerDetail,
 } from 'features/parishioner/parishioner-slice';
-import { ParishionerFormData } from 'models';
-import { useEffect } from 'react';
+import { ParishionerCreateRequestDTO, ParishionerFormData } from 'models';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 
-export default function ParishionerDetailPage() {
+export function ParishionerDetailPage() {
    const { id } = useParams<{ id?: string }>();
+   const isCreating = useMemo(() => !id, [id]);
    const dispatch = useAppDispatch();
    const parishionerDetail = useAppSelector(selectParishionerDetail);
 
-   const { control, handleSubmit, reset } = useForm<ParishionerFormData>({
-      defaultValues: {
+   const defaultValues: ParishionerFormData = useMemo(
+      () => ({
          fullName: '',
          gender: Gender.Male.toString(),
          christianName: '',
          parishName: '',
-      },
+      }),
+      []
+   );
+   const { control, handleSubmit, reset, watch } = useForm<ParishionerFormData>({
+      defaultValues,
    });
+   const selectedGender = +watch('gender');
+
+   const handleResetForm = () => {
+      reset();
+   };
 
    const handleFormSubmit = (formValues: ParishionerFormData) => {
       const { gender } = formValues;
-      dispatch(
-         parishionerActions.updateParishioner({
-            id: id!,
-            fullName: formValues.fullName,
-            dateOfBirth: formValues.dateOfBirth?.toDate().getTime(),
-            gender: gender !== undefined ? +gender : undefined,
-            christianName: formValues.christianName,
-            address: formValues.address,
-            note: formValues.note,
-            parishName: formValues.parishName,
-            dateOfBaptism: formValues.dateOfBaptism?.toDate().getTime(),
-            dateOfFirstCommunion: formValues.dateOfFirstCommunion?.toDate().getTime(),
-            dateOfConfirmation: formValues.dateOfConfirmation?.toDate().getTime(),
-            dateOfOath: formValues.dateOfOath?.toDate().getTime(),
-            dateOfWedding: formValues.dateOfWedding?.toDate().getTime(),
-            dateOfHolyOrder: formValues.dateOfHolyOrder?.toDate().getTime(),
-            dateOfDeath: formValues.dateOfDeath?.toDate().getTime(),
-         })
-      );
+      const data: ParishionerCreateRequestDTO = {
+         fullName: formValues.fullName,
+         dateOfBirth: formValues.dateOfBirth?.toDate().getTime(),
+         gender: gender !== undefined ? +gender : undefined,
+         christianName: formValues.christianName,
+         address: formValues.address,
+         note: formValues.note,
+         parishName: formValues.parishName,
+         dateOfBaptism: formValues.dateOfBaptism?.toDate().getTime(),
+         dateOfFirstCommunion: formValues.dateOfFirstCommunion?.toDate().getTime(),
+         dateOfConfirmation: formValues.dateOfConfirmation?.toDate().getTime(),
+         dateOfOath: formValues.dateOfOath?.toDate().getTime(),
+         dateOfWedding: formValues.dateOfWedding?.toDate().getTime(),
+         dateOfHolyOrder: formValues.dateOfHolyOrder?.toDate().getTime(),
+         dateOfDeath: formValues.dateOfDeath?.toDate().getTime(),
+      };
+
+      if (isCreating) {
+         dispatch(
+            parishionerActions.createParishioner({
+               ...data,
+            })
+         );
+      } else {
+         dispatch(
+            parishionerActions.updateParishioner({
+               id: id!,
+               ...data,
+            })
+         );
+      }
    };
 
    useEffect(() => {
-      if (id) {
-         dispatch(parishionerActions.fetchParishionerDetail(id));
+      if (!isCreating) {
+         dispatch(parishionerActions.fetchParishionerDetail(id!));
       }
-   }, [dispatch, id]);
+   }, [dispatch, id, isCreating]);
 
    useEffect(() => {
       if (parishionerDetail) {
@@ -80,6 +102,10 @@ export default function ParishionerDetailPage() {
       }
    }, [parishionerDetail, reset]);
 
+   useEffect(() => {
+      reset(defaultValues);
+   }, [defaultValues, reset]);
+
    return (
       <div className="pt-2 pb-10">
          <div>
@@ -87,7 +113,7 @@ export default function ParishionerDetailPage() {
                <Link to={Pages.get(PageId.ParishionerList)?.path || ''}>
                   <ArrowLeftIcon className="w-7 h-7" />
                </Link>
-               <span>Thông tin giáo dân</span>
+               <span>{isCreating ? 'Giáo dân mới' : 'Thông tin giáo dân'}</span>
             </h3>
          </div>
 
@@ -101,7 +127,7 @@ export default function ParishionerDetailPage() {
                               <div className="w-36 rounded-full">
                                  <img
                                     src={
-                                       parishionerDetail?.gender === Gender.Male
+                                       selectedGender === Gender.Male
                                           ? Paths.defaultMaleAvatar
                                           : Paths.defaultFemaleAvatar
                                     }
@@ -266,11 +292,11 @@ export default function ParishionerDetailPage() {
                      <Button icon={<ArrowLeftIcon className="w-4 h-4" />} size="lg">
                         Trở lại
                      </Button>
-                     <Button icon={<RefreshIcon />} size="lg">
+                     <Button icon={<RefreshIcon />} size="lg" onClick={handleResetForm}>
                         Khôi phục
                      </Button>
                      <Button type="primary" icon={<CheckIcon />} size="lg">
-                        Lưu thay đổi
+                        {isCreating ? 'Hoàn tất' : 'Lưu thay đổi'}
                      </Button>
                   </div>
                </div>

@@ -9,9 +9,9 @@ export interface PaginationResponse {
    total: number;
 }
 
-export interface ApiParams {
+export interface FilteringParams {
    filters?: FilterCondition[];
-   sort?: SortCondition;
+   sorts?: SortCondition[];
 }
 
 export interface DateRange {
@@ -19,9 +19,16 @@ export interface DateRange {
    endDate: Date;
 }
 
-export interface PaginatedListParams extends ApiParams {
+export interface PaginatedListParams extends FilteringParams {
    page: number;
    limit: number;
+}
+
+export interface ApiParams {
+   page?: number;
+   limit?: number;
+   filters?: string; // JSON string (ex: [{"field": "field_1","op":"eq","val": 1},{"field": "field_2","op":"eq","val": 2}] )
+   sorts?: string; // JSON string (ex: field_1:asc,field_2:desc)
 }
 
 export enum Op {

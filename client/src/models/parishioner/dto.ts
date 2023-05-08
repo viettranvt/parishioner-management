@@ -23,6 +23,23 @@ export interface ParishionerDetailResponseDTO extends ParishionerBasicResponseDT
    dateOfDeath?: string;
 }
 
+export interface ParishionerCreateRequestDTO {
+   fullName: string;
+   dateOfBirth?: number; // milliseconds
+   gender?: number;
+   christianName?: string;
+   address?: string;
+   note?: string;
+   parishName?: string;
+   dateOfBaptism?: number; // milliseconds
+   dateOfFirstCommunion?: number; // milliseconds
+   dateOfConfirmation?: number; // milliseconds
+   dateOfOath?: number; // milliseconds
+   dateOfWedding?: number; // milliseconds
+   dateOfHolyOrder?: number; // milliseconds
+   dateOfDeath?: number; // milliseconds
+}
+
 export interface ParishionerUpdateRequestDTO {
    id: ID;
    fullName: string;
@@ -32,11 +49,11 @@ export interface ParishionerUpdateRequestDTO {
    address?: string;
    note?: string;
    parishName?: string;
-   dateOfBaptism?: number;
-   dateOfFirstCommunion?: number;
-   dateOfConfirmation?: number;
-   dateOfOath?: number;
-   dateOfWedding?: number;
-   dateOfHolyOrder?: number;
-   dateOfDeath?: number;
+   dateOfBaptism?: number; // milliseconds
+   dateOfFirstCommunion?: number; // milliseconds
+   dateOfConfirmation?: number; // milliseconds
+   dateOfOath?: number; // milliseconds
+   dateOfWedding?: number; // milliseconds
+   dateOfHolyOrder?: number; // milliseconds
+   dateOfDeath?: number; // milliseconds
 }

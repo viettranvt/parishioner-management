@@ -1,4 +1,11 @@
-import { ApiParams, DateRange, FilterCondition, Op } from 'models';
+import {
+   FilteringParams,
+   DateRange,
+   FilterCondition,
+   Op,
+   PaginatedListParams,
+   ApiParams,
+} from 'models';
 import moment from 'moment';
 
 export type FilterValue = string | string[] | undefined;
@@ -14,9 +21,16 @@ interface DateRangeFilterField {
 }
 
 const ParamUtils = {
-   toApiParams<T extends ApiParams>(params: T) {
-      const { filters } = params;
-      return { ...params, filters: filters ? JSON.stringify(filters) : undefined };
+   toApiParams<T extends FilteringParams & PaginatedListParams>(params: T): ApiParams {
+      const { filters, sorts } = params;
+      return {
+         page: params.page,
+         limit: params.limit,
+         filters: filters ? JSON.stringify(filters) : undefined,
+         sorts: sorts?.length
+            ? sorts.map((s) => `${s.field}:${s.asc ? 'asc' : 'desc'}`).join(',')
+            : undefined,
+      };
    },
    createFilters<T extends FilterValue>(
       fields: FilterField<T>[],

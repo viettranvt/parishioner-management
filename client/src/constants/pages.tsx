@@ -1,11 +1,12 @@
 import LoginPage from 'features/auth/pages/login-page';
-import ParishionerDetailPage from 'features/parishioner/pages/parishioner-detail-page';
+import { ParishionerDetailPage } from 'features/parishioner/pages/parishioner-detail-page';
 import ParishionerListPage from 'features/parishioner/pages/parishioner-list-page';
 
 export enum PageId {
    Login,
    Dashboard,
    ParishionerList,
+   ParishionerCreating,
    ParishionerDetail,
 }
 
@@ -44,6 +45,17 @@ export const Pages = new Map<PageId, PageConfig>([
          isPrivate: true,
          showOnNavbar: true,
          navTitle: 'Giáo dân',
+      },
+   ],
+   [
+      PageId.ParishionerCreating,
+      {
+         id: PageId.ParishionerCreating,
+         title: 'Thêm giáo dân',
+         path: '/giao-dan-moi',
+         element: <ParishionerDetailPage />,
+         isPrivate: true,
+         relatedPageId: PageId.ParishionerList,
       },
    ],
    [

@@ -12,7 +12,7 @@ import {
    Typography,
 } from '@mui/material';
 import { history } from 'app/store';
-import { ParishionerCard } from 'components';
+import { ParishionerCard } from 'components/parishioner-card';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
 import { DateFormat } from 'constants/strings';
