@@ -5,24 +5,17 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { Control, useController } from 'react-hook-form';
 
-export type RadioFieldOptionValue = string | number;
-
-export interface RadioFieldProps<T extends RadioFieldOptionValue> {
+export interface RadioFieldProps {
    label?: string;
    options: Array<{
       name: string;
-      value: T;
+      value: string;
    }>;
    name: string;
    control: Control<any>;
 }
 
-export const RadioField = <T extends RadioFieldOptionValue>({
-   label,
-   options,
-   name,
-   control,
-}: RadioFieldProps<T>) => {
+export const RadioField = ({ label, options, name, control }: RadioFieldProps) => {
    const {
       field: { value, onChange, onBlur, ref },
    } = useController({

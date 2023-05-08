@@ -37,7 +37,7 @@ export default function ParishionerListPage() {
          fullName,
          christianNames,
          baptismDateRange,
-         firstCommunicationDateRange,
+         firstCommunionDateRange,
          confirmationDateRange,
          weddingDateRange,
       } = filterData;
@@ -58,8 +58,8 @@ export default function ParishionerListPage() {
                dateRange: baptismDateRange,
             }),
             ParamUtils.createDateRangeFilter({
-               field: ApiParamField.dateOfFirstCommunication,
-               dateRange: firstCommunicationDateRange,
+               field: ApiParamField.dateOfFirstCommunion,
+               dateRange: firstCommunionDateRange,
             }),
             ParamUtils.createDateRangeFilter({
                field: ApiParamField.dateOfConfirmation,

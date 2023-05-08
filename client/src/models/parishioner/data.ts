@@ -15,7 +15,7 @@ export interface ParishionerFilterFormData {
    fullName?: string;
    christianNames?: string[];
    baptismDateRange?: DateRange;
-   firstCommunicationDateRange?: DateRange;
+   firstCommunionDateRange?: DateRange;
    confirmationDateRange?: DateRange;
    weddingDateRange?: DateRange;
 }
@@ -23,13 +23,13 @@ export interface ParishionerFilterFormData {
 export interface ParishionerFormData {
    fullName: string;
    christianName: string;
-   dateOfBirth: Dayjs;
+   dateOfBirth?: Dayjs;
    parishName: string;
-   gender: Gender;
+   gender: string;
    address?: string;
    note?: string;
    dateOfBaptism?: Dayjs;
-   dateOfFirstCommunication?: Dayjs;
+   dateOfFirstCommunion?: Dayjs;
    dateOfConfirmation?: Dayjs;
    dateOfOath?: Dayjs;
    dateOfWedding?: Dayjs;
@@ -41,7 +41,7 @@ export interface ParishionerDetailData extends ParishionerBasicData {
    address?: string;
    note?: string;
    dateOfBaptism?: string;
-   dateOfFirstCommunication?: string;
+   dateOfFirstCommunion?: string;
    dateOfConfirmation?: string;
    dateOfOath?: string;
    dateOfWedding?: string;

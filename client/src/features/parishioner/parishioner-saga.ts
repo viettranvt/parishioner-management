@@ -7,6 +7,7 @@ import {
    PaginatedListResponse,
    ParishionerBasicResponseDTO,
    ParishionerDetailResponseDTO,
+   ParishionerUpdateRequestDTO,
 } from 'models';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
@@ -34,7 +35,18 @@ function* fetchParishionerDetail(action: PayloadAction<ID>) {
    }
 }
 
+function* updateParishioner(action: PayloadAction<ParishionerUpdateRequestDTO>) {
+   try {
+      yield call(parishionerApi.update, action.payload);
+      yield put(parishionerActions.updateParishionerSuccess());
+      yield put(parishionerActions.fetchParishionerDetail(action.payload.id));
+   } catch (error) {
+      yield put(parishionerActions.updateParishionerFailed());
+   }
+}
+
 export default function* parishionerSaga() {
    yield takeLatest(parishionerActions.fetchParishionerList, fetchParishionerList);
    yield takeLatest(parishionerActions.fetchParishionerDetail, fetchParishionerDetail);
+   yield takeLatest(parishionerActions.updateParishioner, updateParishioner);
 }

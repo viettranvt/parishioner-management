@@ -14,7 +14,7 @@ export enum ApiParamField {
    fullName = 'full_name',
    christianName = 'christian_name',
    dateOfBaptism = 'date_of_baptism',
-   dateOfFirstCommunication = 'date_of_first_communication',
+   dateOfFirstCommunion = 'date_of_first_communication',
    dateOfConfirmation = 'date_of_confirmation',
    dateOfWedding = 'date_of_wedding',
 }

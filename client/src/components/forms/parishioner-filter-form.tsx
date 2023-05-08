@@ -53,7 +53,7 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
    });
    const [christianNames, setChristianNames] = useState<string[]>([]);
    const [baptismDateRange, setBaptismDateRange] = useState<DateRange | undefined>();
-   const [firstCommunicationDateRange, setFirstCommunicationDateRange] = useState<DateRange>();
+   const [firstCommunionDateRange, setFirstCommunionDateRange] = useState<DateRange>();
    const [confirmationDateRange, setConfirmationDateRange] = useState<DateRange>();
    const [weddingDateRange, setWeddingDateRange] = useState<DateRange>();
 
@@ -71,10 +71,8 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
       setBaptismDateRange(dateRange?.startDate && dateRange.endDate ? dateRange : undefined);
    };
 
-   const handleFirstCommunicationDateChange = (dateRange?: DateRangePickerDates) => {
-      setFirstCommunicationDateRange(
-         dateRange?.startDate && dateRange.endDate ? dateRange : undefined
-      );
+   const handleFirstCommunionDateChange = (dateRange?: DateRangePickerDates) => {
+      setFirstCommunionDateRange(dateRange?.startDate && dateRange.endDate ? dateRange : undefined);
    };
 
    const handleConfirmationDateChange = (dateRange?: DateRangePickerDates) => {
@@ -90,7 +88,7 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
          ...formValues,
          christianNames,
          baptismDateRange,
-         firstCommunicationDateRange,
+         firstCommunionDateRange,
          confirmationDateRange,
          weddingDateRange,
       });
@@ -150,7 +148,7 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
          <Box mt={3}>
             <DateRangeField
                label="Ngày rước lễ lần đầu"
-               onChange={handleFirstCommunicationDateChange}
+               onChange={handleFirstCommunionDateChange}
             />
          </Box>
 

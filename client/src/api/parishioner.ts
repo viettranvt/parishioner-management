@@ -6,7 +6,9 @@ import {
    PaginatedListResponse,
    PaginatedParishionerResponseDTO,
    ParishionerDetailResponseDTO,
+   ParishionerUpdateRequestDTO,
 } from 'models';
+import snakecaseKeys from 'snakecase-keys';
 import ParamUtils from 'utils/param';
 
 const resourcePath = `${ResourcePaths.parishioner}`;
@@ -23,5 +25,9 @@ export const parishionerApi = {
    getDetail(id: ID): Promise<ParishionerDetailResponseDTO> {
       const url = `${resourcePath}/detail/${id}`;
       return axiosClient.get(url);
+   },
+   update(payload: ParishionerUpdateRequestDTO) {
+      const url = `${resourcePath}/update`;
+      return axiosClient.post(url, snakecaseKeys(payload));
    },
 };

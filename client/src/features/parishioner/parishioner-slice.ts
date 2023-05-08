@@ -7,6 +7,7 @@ import {
    PaginationResponse,
    ParishionerBasicData,
    ParishionerDetailData,
+   ParishionerUpdateRequestDTO,
 } from 'models';
 
 export interface ParishionerState {
@@ -57,6 +58,15 @@ const parishionerSlice = createSlice({
          state.detail = action.payload;
       },
       fetchParishionerDetailFailed(state) {
+         state.loading = false;
+      },
+      updateParishioner(state, action: PayloadAction<ParishionerUpdateRequestDTO>) {
+         state.loading = true;
+      },
+      updateParishionerSuccess(state) {
+         state.loading = false;
+      },
+      updateParishionerFailed(state) {
          state.loading = false;
       },
 

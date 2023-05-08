@@ -17,21 +17,40 @@ import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 
 export default function ParishionerDetailPage() {
-   const { id } = useParams();
+   const { id } = useParams<{ id?: string }>();
    const dispatch = useAppDispatch();
    const parishionerDetail = useAppSelector(selectParishionerDetail);
 
    const { control, handleSubmit, reset } = useForm<ParishionerFormData>({
       defaultValues: {
          fullName: '',
-         gender: Gender.Male,
+         gender: Gender.Male.toString(),
          christianName: '',
          parishName: '',
       },
    });
 
    const handleFormSubmit = (formValues: ParishionerFormData) => {
-      console.log(formValues);
+      const { gender } = formValues;
+      dispatch(
+         parishionerActions.updateParishioner({
+            id: id!,
+            fullName: formValues.fullName,
+            dateOfBirth: formValues.dateOfBirth?.toDate().getTime(),
+            gender: gender !== undefined ? +gender : undefined,
+            christianName: formValues.christianName,
+            address: formValues.address,
+            note: formValues.note,
+            parishName: formValues.parishName,
+            dateOfBaptism: formValues.dateOfBaptism?.toDate().getTime(),
+            dateOfFirstCommunion: formValues.dateOfFirstCommunion?.toDate().getTime(),
+            dateOfConfirmation: formValues.dateOfConfirmation?.toDate().getTime(),
+            dateOfOath: formValues.dateOfOath?.toDate().getTime(),
+            dateOfWedding: formValues.dateOfWedding?.toDate().getTime(),
+            dateOfHolyOrder: formValues.dateOfHolyOrder?.toDate().getTime(),
+            dateOfDeath: formValues.dateOfDeath?.toDate().getTime(),
+         })
+      );
    };
 
    useEffect(() => {
@@ -44,14 +63,14 @@ export default function ParishionerDetailPage() {
       if (parishionerDetail) {
          reset({
             fullName: parishionerDetail.fullName,
-            gender: parishionerDetail.gender,
+            gender: parishionerDetail.gender.toString(),
             dateOfBirth: dayjs(parishionerDetail.dateOfBirth),
             christianName: parishionerDetail.christianName,
             address: parishionerDetail.address,
             note: parishionerDetail.note,
             parishName: parishionerDetail.parishName,
             dateOfBaptism: dayjs(parishionerDetail.dateOfBaptism),
-            dateOfFirstCommunication: dayjs(parishionerDetail.dateOfFirstCommunication),
+            dateOfFirstCommunion: dayjs(parishionerDetail.dateOfFirstCommunion),
             dateOfConfirmation: dayjs(parishionerDetail.dateOfConfirmation),
             dateOfOath: dayjs(parishionerDetail.dateOfOath),
             dateOfWedding: dayjs(parishionerDetail.dateOfWedding),
@@ -112,11 +131,11 @@ export default function ParishionerDetailPage() {
                                  options={[
                                     {
                                        name: 'Nam',
-                                       value: Gender.Male,
+                                       value: Gender.Male.toString(),
                                     },
                                     {
                                        name: 'Nữ',
-                                       value: Gender.Female,
+                                       value: Gender.Female.toString(),
                                     },
                                  ]}
                               />
@@ -217,7 +236,7 @@ export default function ParishionerDetailPage() {
 
                            <DateField
                               label="Ngày rước lễ lần đầu"
-                              name="dateOfFirstCommunication"
+                              name="dateOfFirstCommunion"
                               control={control}
                            />
 
