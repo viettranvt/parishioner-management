@@ -66,7 +66,7 @@ function* deleteParishioner(action: PayloadAction<ID>) {
       yield call(parishionerApi.delete, action.payload);
       yield put(parishionerActions.deleteParishionerSuccess());
       const filter: PaginatedListParams = yield select(selectParishionerFilter);
-      yield put(parishionerActions.fetchParishionerList(filter));
+      yield put(parishionerActions.fetchParishionerList({ ...filter, page: 1 }));
    } catch (error) {
       yield put(parishionerActions.deleteParishionerFailed());
    }
