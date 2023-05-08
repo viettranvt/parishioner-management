@@ -14,7 +14,7 @@ import {
    selectParishionerLoading,
    selectParishionerPagination,
 } from 'features/parishioner/parishioner-slice';
-import { Op, ParishionerFilterFormData } from 'models';
+import { Op, ParishionerBasicData, ParishionerFilterFormData } from 'models';
 import { ChangeEvent, useEffect } from 'react';
 import ParamUtils, { FilterValue } from 'utils/param';
 
@@ -84,8 +84,12 @@ export default function ParishionerListPage() {
       );
    };
 
-   const handleAddParishioner = () => {
+   const handleCreateParishioner = () => {
       history.push(Pages.get(PageId.ParishionerCreating)?.path ?? '');
+   };
+
+   const handleDeleteParishioner = (data: ParishionerBasicData) => {
+      dispatch(parishionerActions.deleteParishioner(data.id));
    };
 
    useEffect(() => {
@@ -117,7 +121,7 @@ export default function ParishionerListPage() {
                   type="primary"
                   outlined
                   contrast
-                  onClick={handleAddParishioner}
+                  onClick={handleCreateParishioner}
                >
                   Thêm mới
                </Button>
@@ -135,6 +139,7 @@ export default function ParishionerListPage() {
                      parishioners={parishioners}
                      page={pagination.page}
                      limit={pagination.limit}
+                     onDelete={handleDeleteParishioner}
                   />
                   <div className="flex justify-center mt-5">
                      <Pagination

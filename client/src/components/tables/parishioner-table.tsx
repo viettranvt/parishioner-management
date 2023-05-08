@@ -12,17 +12,20 @@ import {
    Typography,
 } from '@mui/material';
 import { history } from 'app/store';
+import { ConfirmModal } from 'components/modals';
 import { ParishionerCard } from 'components/parishioner-card';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
 import { DateFormat } from 'constants/strings';
 import { ParishionerBasicData } from 'models';
 import moment from 'moment';
+import { useState } from 'react';
 
 export interface ParishionerTableProps {
    parishioners: ParishionerBasicData[];
    page?: number;
    limit?: number;
+   onDelete?: (row: ParishionerBasicData) => void;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -32,9 +35,34 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
    },
 }));
 
-export function ParishionerTable({ parishioners, page = 1, limit = 10 }: ParishionerTableProps) {
+export function ParishionerTable({
+   parishioners,
+   page = 1,
+   limit = 10,
+   onDelete,
+}: ParishionerTableProps) {
+   const [openDeletionConfirmModal, setOpenDeletionConfirmModal] = useState<boolean>(false);
+   const [focusedRow, setFocusedRow] = useState<ParishionerBasicData | undefined>(undefined);
+
    const handleRowClick = (data: ParishionerBasicData) => {
       history.push((Pages.get(PageId.ParishionerDetail)?.path ?? '').replace(':id', data.id));
+   };
+
+   const handleDeleteRow = (data: ParishionerBasicData) => {
+      setFocusedRow(data);
+      setOpenDeletionConfirmModal(true);
+   };
+
+   const handleCloseDeletionConfirmModal = () => {
+      setFocusedRow(undefined);
+      setOpenDeletionConfirmModal(false);
+   };
+
+   const handleOkDeletionConfirmModal = () => {
+      if (focusedRow && onDelete) {
+         onDelete(focusedRow);
+         handleCloseDeletionConfirmModal();
+      }
    };
 
    return (
@@ -43,7 +71,6 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
             <Table sx={{ minWidth: 650 }} size="small" stickyHeader>
                <TableHead>
                   <TableRow>
-                     <StyledTableCell align="center">STT</StyledTableCell>
                      <StyledTableCell>Họ tên</StyledTableCell>
                      <StyledTableCell>Tên thánh</StyledTableCell>
                      <StyledTableCell>Ngày sinh</StyledTableCell>
@@ -53,7 +80,7 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
                   </TableRow>
                </TableHead>
                <TableBody>
-                  {parishioners.map((row, idx) => {
+                  {parishioners.map((row) => {
                      const { dateOfBirth } = row;
                      return (
                         <TableRow
@@ -62,7 +89,6 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
                            hover
                            onClick={() => handleRowClick(row)}
                         >
-                           <TableCell align="center">{(page - 1) * limit + idx + 1}</TableCell>
                            <TableCell>
                               {' '}
                               <ParishionerCard fullName={row.fullName} />
@@ -84,7 +110,13 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
                                  <IconButton size="small">
                                     <Edit fontSize="small" />
                                  </IconButton>
-                                 <IconButton size="small">
+                                 <IconButton
+                                    size="small"
+                                    onClick={(e) => {
+                                       e.stopPropagation();
+                                       handleDeleteRow(row);
+                                    }}
+                                 >
                                     <Delete fontSize="small" />
                                  </IconButton>
                                  <IconButton size="small">
@@ -98,6 +130,13 @@ export function ParishionerTable({ parishioners, page = 1, limit = 10 }: Parishi
                </TableBody>
             </Table>
          </TableContainer>
+         <ConfirmModal
+            message="Bạn thật sự muốn xoá thông tin giáo dân này?"
+            open={openDeletionConfirmModal}
+            onOk={handleOkDeletionConfirmModal}
+            onCancel={handleCloseDeletionConfirmModal}
+            onClose={handleCloseDeletionConfirmModal}
+         />
       </>
    );
 }

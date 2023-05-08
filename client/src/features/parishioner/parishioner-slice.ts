@@ -68,6 +68,15 @@ const parishionerSlice = createSlice({
       fetchParishionerDetailFailed(state) {
          state.loading = false;
       },
+      createParishioner(state, action: PayloadAction<ParishionerCreateRequestDTO>) {
+         state.loading = true;
+      },
+      createParishionerSuccess(state) {
+         state.loading = false;
+      },
+      createParishionerFailed(state) {
+         state.loading = false;
+      },
       updateParishioner(state, action: PayloadAction<ParishionerUpdateRequestDTO>) {
          state.loading = true;
       },
@@ -77,13 +86,13 @@ const parishionerSlice = createSlice({
       updateParishionerFailed(state) {
          state.loading = false;
       },
-      createParishioner(state, action: PayloadAction<ParishionerCreateRequestDTO>) {
+      deleteParishioner(state, action: PayloadAction<ID>) {
          state.loading = true;
       },
-      createParishionerSuccess(state) {
+      deleteParishionerSuccess(state) {
          state.loading = false;
       },
-      createParishionerFailed(state) {
+      deleteParishionerFailed(state) {
          state.loading = false;
       },
 

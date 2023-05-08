@@ -35,4 +35,8 @@ export const parishionerApi = {
       const url = `${resourcePath}/update`;
       return axiosClient.post(url, snakecaseKeys(payload));
    },
+   delete(id: ID): Promise<boolean> {
+      const url = `${resourcePath}/delete/${id}`;
+      return axiosClient.post(url);
+   },
 };

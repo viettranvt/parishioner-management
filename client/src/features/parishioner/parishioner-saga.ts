@@ -1,7 +1,10 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { parishionerApi } from 'api/parishioner';
 import { PageId, Pages } from 'constants/pages';
-import { parishionerActions } from 'features/parishioner/parishioner-slice';
+import {
+   parishionerActions,
+   selectParishionerFilter,
+} from 'features/parishioner/parishioner-slice';
 import {
    ID,
    PaginatedListParams,
@@ -12,7 +15,7 @@ import {
    ParishionerUpdateRequestDTO,
 } from 'models';
 import { push } from 'redux-first-history';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 function* fetchParishionerList(action: PayloadAction<PaginatedListParams>) {
    try {
@@ -58,9 +61,21 @@ function* updateParishioner(action: PayloadAction<ParishionerUpdateRequestDTO>) 
    }
 }
 
+function* deleteParishioner(action: PayloadAction<ID>) {
+   try {
+      yield call(parishionerApi.delete, action.payload);
+      yield put(parishionerActions.deleteParishionerSuccess());
+      const filter: PaginatedListParams = yield select(selectParishionerFilter);
+      yield put(parishionerActions.fetchParishionerList(filter));
+   } catch (error) {
+      yield put(parishionerActions.deleteParishionerFailed());
+   }
+}
+
 export default function* parishionerSaga() {
    yield takeLatest(parishionerActions.fetchParishionerList, fetchParishionerList);
    yield takeLatest(parishionerActions.fetchParishionerDetail, fetchParishionerDetail);
    yield takeLatest(parishionerActions.createParishioner, createParishioner);
    yield takeLatest(parishionerActions.updateParishioner, updateParishioner);
+   yield takeLatest(parishionerActions.deleteParishioner, deleteParishioner);
 }
