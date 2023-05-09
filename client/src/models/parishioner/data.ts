@@ -47,4 +47,5 @@ export interface ParishionerDetailData extends ParishionerBasicData {
    dateOfWedding?: string;
    dateOfHolyOrder?: string;
    dateOfDeath?: string;
+   guarantor?: ParishionerBasicData;
 }

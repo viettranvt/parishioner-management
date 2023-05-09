@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Button, Dropdown } from 'components/common';
+import { Button as CustomButton, Dropdown } from 'components/common';
 import { MoreVerticalIcon } from 'components/icons';
 import { useMemo } from 'react';
 import Avatar from 'react-avatar';
@@ -19,6 +19,7 @@ interface SimpleInfoProps {
 
 export interface ParishionerCardProps extends SimpleInfoProps {
    style?: ParishionerCardStyle;
+   onReselect?: () => void;
 }
 
 function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
@@ -60,6 +61,7 @@ function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
 
 export function ParishionerCard({
    style = ParishionerCardStyle.simple,
+   onReselect,
    ...simpleInfoProps
 }: ParishionerCardProps) {
    if (style === ParishionerCardStyle.simple) {
@@ -77,15 +79,15 @@ export function ParishionerCard({
                <Link key="edit-info" to="/">
                   Sửa thông tin
                </Link>,
-               <Link key="re-select" to="/">
+               <span key="reselect" onClick={onReselect}>
                   Chọn lại
-               </Link>,
+               </span>,
                <Link key="remove" to="/">
                   Xoá
                </Link>,
             ]}
          >
-            <Button
+            <CustomButton
                className="bg-transparent hover:bg-transparent"
                size="sm"
                icon={<MoreVerticalIcon />}
