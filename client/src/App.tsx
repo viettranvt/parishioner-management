@@ -3,35 +3,30 @@ import { AdminLayout } from 'components/layouts';
 import { PageId, Pages } from 'constants/pages';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-const privatePages = Array.from(Pages.values()).filter((p) => p.isPrivate);
-const loginPage = Pages.get(PageId.login);
-const dashboardPage = Pages.get(PageId.dashboard);
+const PrivatePages = Array.from(Pages.values()).filter((p) => p.isPrivate);
+const LoginPage = Pages.get(PageId.Login);
+const HomePage = Pages.get(PageId.ParishionerList);
 
 function App() {
    return (
-      <div>
-         <Routes>
+      <Routes>
+         <Route path="/" element={<Navigate to={HomePage?.path ?? LoginPage?.path ?? '/'} />} />
+         <Route path={LoginPage?.path} element={LoginPage?.element} />
+
+         {PrivatePages.map((p) => (
             <Route
-               path="/"
-               element={<Navigate to={dashboardPage?.path ?? loginPage?.path ?? '/'} />}
+               key={p.path}
+               path={p.path}
+               element={
+                  <Protected>
+                     <AdminLayout>{p.element}</AdminLayout>
+                  </Protected>
+               }
             />
-            <Route path={loginPage?.path} element={loginPage?.element} />
+         ))}
 
-            {privatePages.map((p) => (
-               <Route
-                  key={p.path}
-                  path={p.path}
-                  element={
-                     <Protected>
-                        <AdminLayout>{p.element}</AdminLayout>
-                     </Protected>
-                  }
-               />
-            ))}
-
-            <Route path="*" element={<NotFound />} />
-         </Routes>
-      </div>
+         <Route path="*" element={<NotFound />} />
+      </Routes>
    );
 }
 

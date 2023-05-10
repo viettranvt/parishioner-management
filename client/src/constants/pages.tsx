@@ -1,13 +1,13 @@
 import LoginPage from 'features/auth/pages/login-page';
-import DashboardPage from 'features/dashboard/pages/dashboard-page';
-import ParishionerDetailPage from 'features/parishioner/pages/parishioner-detail-page';
+import { ParishionerDetailPage } from 'features/parishioner/pages/parishioner-detail-page';
 import ParishionerListPage from 'features/parishioner/pages/parishioner-list-page';
 
 export enum PageId {
-   login,
-   dashboard,
-   parishionerList,
-   parishionerDetail,
+   Login,
+   Dashboard,
+   ParishionerList,
+   ParishionerCreating,
+   ParishionerDetail,
 }
 
 export interface PageConfig {
@@ -18,26 +18,27 @@ export interface PageConfig {
    element: JSX.Element;
    showOnNavbar?: boolean;
    navTitle?: string;
+   relatedPageId?: PageId;
 }
 
 export const Pages = new Map<PageId, PageConfig>([
-   [PageId.login, { id: PageId.login, path: '/dang-nhap', element: <LoginPage /> }],
+   [PageId.Login, { id: PageId.Login, path: '/dang-nhap', element: <LoginPage /> }],
+   // [
+   //    PageId.Dashboard,
+   //    {
+   //       id: PageId.Dashboard,
+   //       path: '/tong-quan',
+   //       element: <DashboardPage />,
+   //       isPrivate: true,
+   //       showOnNavbar: true,
+   //       navTitle: 'Tổng quan',
+   //       title: 'Tổng quan',
+   //    },
+   // ],
    [
-      PageId.dashboard,
+      PageId.ParishionerList,
       {
-         id: PageId.dashboard,
-         path: '/tong-quan',
-         element: <DashboardPage />,
-         isPrivate: true,
-         showOnNavbar: true,
-         navTitle: 'Tổng quan',
-         title: 'Tổng quan',
-      },
-   ],
-   [
-      PageId.parishionerList,
-      {
-         id: PageId.parishionerList,
+         id: PageId.ParishionerList,
          title: 'Danh sách giáo dân',
          path: '/danh-sach-giao-dan',
          element: <ParishionerListPage />,
@@ -47,13 +48,25 @@ export const Pages = new Map<PageId, PageConfig>([
       },
    ],
    [
-      PageId.parishionerDetail,
+      PageId.ParishionerCreating,
       {
-         id: PageId.parishionerDetail,
+         id: PageId.ParishionerCreating,
+         title: 'Thêm giáo dân',
+         path: '/giao-dan-moi',
+         element: <ParishionerDetailPage />,
+         isPrivate: true,
+         relatedPageId: PageId.ParishionerList,
+      },
+   ],
+   [
+      PageId.ParishionerDetail,
+      {
+         id: PageId.ParishionerDetail,
          title: 'Thông tin giáo dân',
          path: '/giao-dan/:id',
          element: <ParishionerDetailPage />,
          isPrivate: true,
+         relatedPageId: PageId.ParishionerList,
       },
    ],
 ]);
