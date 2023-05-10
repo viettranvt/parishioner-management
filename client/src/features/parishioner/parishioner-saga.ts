@@ -14,6 +14,7 @@ import {
    ParishionerDetailResponseDTO,
    ParishionerUpdateRequestDTO,
 } from 'models';
+import { toast } from 'react-toastify';
 import { push } from 'redux-first-history';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 
@@ -53,11 +54,19 @@ function* createParishioner(action: PayloadAction<ParishionerCreateRequestDTO>) 
 
 function* updateParishioner(action: PayloadAction<ParishionerUpdateRequestDTO>) {
    try {
+      // Update
       yield call(parishionerApi.update, action.payload);
+
+      // Notify success
       yield put(parishionerActions.updateParishionerSuccess());
+      toast.success('Cập nhật thành công');
+
+      // Reload detail
       yield put(parishionerActions.fetchParishionerDetail(action.payload.id));
    } catch (error) {
+      // Notify error
       yield put(parishionerActions.updateParishionerFailed());
+      toast.error('Cập nhật thất bại');
    }
 }
 

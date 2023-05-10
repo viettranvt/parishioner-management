@@ -20,6 +20,7 @@ interface SimpleInfoProps {
 export interface ParishionerCardProps extends SimpleInfoProps {
    style?: ParishionerCardStyle;
    onReselect?: () => void;
+   onRemove?: () => void;
 }
 
 function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
@@ -62,6 +63,7 @@ function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
 export function ParishionerCard({
    style = ParishionerCardStyle.simple,
    onReselect,
+   onRemove,
    ...simpleInfoProps
 }: ParishionerCardProps) {
    if (style === ParishionerCardStyle.simple) {
@@ -82,9 +84,9 @@ export function ParishionerCard({
                <span key="reselect" onClick={onReselect}>
                   Chọn lại
                </span>,
-               <Link key="remove" to="/">
-                  Xoá
-               </Link>,
+               <span key="remove" onClick={onRemove}>
+                  Loại bỏ
+               </span>,
             ]}
          >
             <CustomButton
@@ -93,6 +95,7 @@ export function ParishionerCard({
                icon={<MoreVerticalIcon />}
                shape="circle"
                outlined={false}
+               htmlType="button"
             />
          </Dropdown>
       </div>

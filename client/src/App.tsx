@@ -9,24 +9,26 @@ const HomePage = Pages.get(PageId.ParishionerList);
 
 function App() {
    return (
-      <Routes>
-         <Route path="/" element={<Navigate to={HomePage?.path ?? LoginPage?.path ?? '/'} />} />
-         <Route path={LoginPage?.path} element={LoginPage?.element} />
+      <>
+         <Routes>
+            <Route path="/" element={<Navigate to={HomePage?.path ?? LoginPage?.path ?? '/'} />} />
+            <Route path={LoginPage?.path} element={LoginPage?.element} />
 
-         {PrivatePages.map((p) => (
-            <Route
-               key={p.path}
-               path={p.path}
-               element={
-                  <Protected>
-                     <AdminLayout>{p.element}</AdminLayout>
-                  </Protected>
-               }
-            />
-         ))}
+            {PrivatePages.map((p) => (
+               <Route
+                  key={p.path}
+                  path={p.path}
+                  element={
+                     <Protected>
+                        <AdminLayout>{p.element}</AdminLayout>
+                     </Protected>
+                  }
+               />
+            ))}
 
-         <Route path="*" element={<NotFound />} />
-      </Routes>
+            <Route path="*" element={<NotFound />} />
+         </Routes>
+      </>
    );
 }
 
