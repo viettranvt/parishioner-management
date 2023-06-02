@@ -3,10 +3,40 @@ version: "3.0"
 services:
   mongodb:
     image: mongo:5.0
+    restart: always
     ports:
       - 27017:27017
     volumes:
       - ./mongo-data:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER_NAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_USER_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER_NAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_USER_PASSWORD}
+    # networks:
+    #   - mynet
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/server.dockerfile
+    image: server-api:1.0.0
+    container_name: server-api
+    restart: always
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+    environment:
+      API_PREFIX: ${API_PREFIX}
+      PORT: ${PORT}
+      JWT_KEY: ${JWT_KEY}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      MODE: ${MODE}
+      MONGO_USER_NAME: ${MONGO_USER_NAME}
+      MONGO_USER_PASSWORD: ${MONGO_USER_PASSWORD}
+      MONGO_DB_URL: ${MONGO_DB_URL}
+    ports:
+      - ${PORT}:${PORT}
+    # networks:
+    #   - mynet
+# networks:
+#   mynet:

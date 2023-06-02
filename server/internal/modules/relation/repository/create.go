@@ -111,7 +111,7 @@ func (repo *createRepository) GetRelationInfoListInParishionerInfo(ctx context.C
 
 	if parishionerInfo.ChildIDs != nil {
 		for _, childID := range parishionerInfo.ChildIDs {
-			// relation of child
+			// // relation of child
 			relationInfoList = append(relationInfoList, &relation_model.RelationCreation{
 				ParishionerID: currentParishionerID,
 				DependentsID:  childID,
@@ -156,6 +156,7 @@ func (repo *createRepository) insertRelation(ctx context.Context, relation *rela
 	filters := map[string]interface{}{
 		database_field_const.ParishionerID: relation.ParishionerID,
 		database_field_const.DependentsID:  relation.DependentsID,
+		database_field_const.RelationShip:  relation.Type,
 	}
 
 	result, err := repo.store.GetRelation(ctx, filters, false)
@@ -168,6 +169,7 @@ func (repo *createRepository) insertRelation(ctx context.Context, relation *rela
 
 	if result != nil {
 		logrus.Info("relation has exists")
+		logrus.Info(result.ID)
 		return result.ID
 	}
 

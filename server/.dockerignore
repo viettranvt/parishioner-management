@@ -1,0 +1,8 @@
+.vscode
+mongo-data
+makefile
+docker-compose.yml
+README.md
+LICENSE
+docker
+.env.example

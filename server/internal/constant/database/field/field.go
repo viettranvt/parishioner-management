@@ -14,4 +14,5 @@ const (
 	ChristianName      = "christian_name"
 	DependentsID       = "dependents_id"
 	ParishionerID      = "parishioner_id"
+	RelationShip       = "relationship"
 )

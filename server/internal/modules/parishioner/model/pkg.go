@@ -89,9 +89,9 @@ type ParishionerDetailResponse struct {
 	Note                 *string                   `json:"note,omitempty"`
 	Gender               int                       `json:"gender"`
 	Address              *string                   `json:"address,omitempty"`
-	Father               *ParishionerListResponse  `json:"father"`
-	Mother               *ParishionerListResponse  `json:"mother"`
-	WifeOrHusband        *ParishionerListResponse  `json:"wife_or_husband"`
-	Guarantor            *ParishionerListResponse  `json:"guarantor"`
-	Childs               []ParishionerListResponse `json:"childs"`
+	Father               *ParishionerListResponse  `json:"father,omitempty"`
+	Mother               *ParishionerListResponse  `json:"mother,omitempty"`
+	WifeOrHusband        *ParishionerListResponse  `json:"wife_or_husband,omitempty"`
+	Guarantor            *ParishionerListResponse  `json:"guarantor,omitempty"`
+	Children             []ParishionerListResponse `json:"children"`
 }

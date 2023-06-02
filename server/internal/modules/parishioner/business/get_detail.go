@@ -75,11 +75,7 @@ func (biz *getDetailBusiness) ToResponse(
 		Note:                 parishioner.Note,
 		Gender:               parishioner.Gender,
 		Address:              parishioner.Address,
-		Father:               nil,
-		Mother:               nil,
-		WifeOrHusband:        nil,
-		Guarantor:            nil,
-		Childs:               []parishioner_model.ParishionerListResponse{},
+		Children:             []parishioner_model.ParishionerListResponse{},
 	}
 
 	biz.LoadRelation(ctx, parishioner.ID, &result)
@@ -98,6 +94,8 @@ func (biz *getDetailBusiness) LoadRelation(
 	if err != nil {
 		panic(err)
 	}
+
+	childListResponse := make([]parishioner_model.ParishionerListResponse, 0)
 
 	for _, value := range relationList {
 		condition := map[string]interface{}{
@@ -119,8 +117,6 @@ func (biz *getDetailBusiness) LoadRelation(
 			Gender:        parishioner.Gender,
 		}
 
-		childListResponse := make([]parishioner_model.ParishionerListResponse, 0)
-
 		switch value.Relationship {
 		case relationship_const.Father:
 			response.Father = basicResponse
@@ -133,7 +129,7 @@ func (biz *getDetailBusiness) LoadRelation(
 		case relationship_const.Child:
 			childListResponse = append(childListResponse, *basicResponse)
 		}
-
-		response.Childs = childListResponse
 	}
+
+	response.Children = childListResponse
 }
