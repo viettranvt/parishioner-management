@@ -47,5 +47,9 @@ export interface ParishionerDetailData extends ParishionerBasicData {
    dateOfWedding?: string;
    dateOfHolyOrder?: string;
    dateOfDeath?: string;
+   father?: ParishionerBasicData;
+   mother?: ParishionerBasicData;
    guarantor?: ParishionerBasicData;
+   wifeOrHusband?: ParishionerBasicData;
+   children?: ParishionerBasicData[];
 }

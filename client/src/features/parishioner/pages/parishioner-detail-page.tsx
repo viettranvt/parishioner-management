@@ -1,40 +1,58 @@
+import { CheckOutlined } from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { ParishionerSelectModal } from 'components';
 import { Button, FormFieldLabel } from 'components/common';
 import { DateField, InputField, RadioField, SelectField } from 'components/forms/fields';
-import { ArrowLeftIcon, CheckIcon, PlusIcon, RefreshIcon } from 'components/icons';
+import { ArrowLeftIcon, PlusIcon, RefreshIcon } from 'components/icons';
 import { ParishionerCard, ParishionerCardStyle } from 'components/parishioner-card';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
 import { DateFormat, MaleChristianNames, ParishNames, Paths } from 'constants/strings';
 import dayjs from 'dayjs';
+import { AddParishionerButton } from 'features/parishioner/pages/add-parishioner-button';
 import {
    parishionerActions,
    selectParishionerDetail,
    selectParishionerList,
+   selectParishionerLoading,
 } from 'features/parishioner/parishioner-slice';
-import { ParishionerBasicData, ParishionerCreateRequestDTO, ParishionerFormData } from 'models';
+import { cloneDeep } from 'lodash';
+import { ID, ParishionerBasicData, ParishionerCreateRequestDTO, ParishionerFormData } from 'models';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 
-enum ParishionerSelectAction {
-   AddGuarantor,
+enum RelativeType {
+   Father,
+   Mother,
+   MarriagePartner,
+   Guarantor,
+   Children,
+}
+
+interface RemoveRelativeOptions {
+   childrenId?: ID;
 }
 
 export function ParishionerDetailPage() {
    const { id } = useParams<{ id?: string }>();
    const isCreating = useMemo(() => !id, [id]);
    const dispatch = useAppDispatch();
+   const saveLoading = useAppSelector(selectParishionerLoading);
    const parishionerDetail = useAppSelector(selectParishionerDetail);
-   const parishionerSelectModalOptions = useAppSelector(selectParishionerList);
+   const relativeSelectModalOptions = useAppSelector(selectParishionerList);
+   const [father, setFather] = useState<ParishionerBasicData>();
+   const [mother, setMother] = useState<ParishionerBasicData>();
+   const [marriagePartner, setMarriagePartner] = useState<ParishionerBasicData>();
    const [guarantor, setGuarantor] = useState<ParishionerBasicData>();
-   const [parishionerSelectionAction, setParishionerSelectAction] = useState<
-      ParishionerSelectAction | undefined
-   >();
-   const [parishionerSelectModalSelectedOptions, setParishionerSelectModalSelectedOptions] =
-      useState<ParishionerBasicData[]>([]);
+   const [children, setChildren] = useState<ParishionerBasicData[]>();
+   const [relativeSelectModalSelectedOptions, setRelativeSelectModalSelectedOptions] = useState<
+      ParishionerBasicData[]
+   >([]);
+   const [workingRelativeType, setWorkingRelativeType] = useState<RelativeType | undefined>();
+   const [reselectedChild, setReselectedChild] = useState<ParishionerBasicData>();
 
    const defaultValues: ParishionerFormData = useMemo(
       () => ({
@@ -50,10 +68,11 @@ export function ParishionerDetailPage() {
    });
    const selectedGender = +watch('gender');
 
-   const [openParishionerSelectModal, setOpenParishionerSelectModal] = useState<boolean>(false);
+   const [openRelativeSelectModal, setOpenRelativeSelectModal] = useState<boolean>(false);
 
    const handleResetForm = () => {
       reset();
+      setGuarantor(parishionerDetail?.guarantor);
    };
 
    const handleFormSubmit = (formValues: ParishionerFormData) => {
@@ -73,7 +92,11 @@ export function ParishionerDetailPage() {
          dateOfWedding: formValues.dateOfWedding?.toDate().getTime(),
          dateOfHolyOrder: formValues.dateOfHolyOrder?.toDate().getTime(),
          dateOfDeath: formValues.dateOfDeath?.toDate().getTime(),
+         fatherId: father?.id,
+         motherId: mother?.id,
          guarantorId: guarantor?.id,
+         wifeOrHusbandId: marriagePartner?.id,
+         childIds: children?.map((c) => c.id),
       };
 
       if (isCreating) {
@@ -92,38 +115,147 @@ export function ParishionerDetailPage() {
       }
    };
 
-   const handleCloseParishionerSelectModal = () => {
-      setOpenParishionerSelectModal(false);
-      setParishionerSelectAction(undefined);
+   const handleCloseRelativeSelectModal = () => {
+      setOpenRelativeSelectModal(false);
+      setWorkingRelativeType(undefined);
+      setReselectedChild(undefined);
    };
 
-   const handleSaveParishionerSelectModal = (data: ParishionerBasicData[]) => {
-      switch (parishionerSelectionAction) {
-         case ParishionerSelectAction.AddGuarantor:
-            setGuarantor(data[0]);
+   const handleSaveRelativeSelectModal = (data: ParishionerBasicData[]) => {
+      const singleRelative = data[0];
+
+      switch (workingRelativeType) {
+         case RelativeType.Father:
+            setFather(singleRelative);
+            break;
+
+         case RelativeType.Mother:
+            setMother(singleRelative);
+            break;
+
+         case RelativeType.MarriagePartner:
+            setMarriagePartner(singleRelative);
+            break;
+
+         case RelativeType.Guarantor:
+            setGuarantor(singleRelative);
+            break;
+
+         case RelativeType.Children:
+            setChildren((prev) => {
+               if (!reselectedChild) {
+                  return [...(prev ?? []), singleRelative];
+               }
+
+               const newChildren = cloneDeep(prev) ?? [];
+               const index = (prev ?? []).findIndex((c) => c.id === reselectedChild.id);
+               if (index > -1) {
+                  newChildren[index] = singleRelative;
+               }
+
+               return newChildren;
+            });
             break;
 
          default:
             break;
       }
 
-      handleCloseParishionerSelectModal();
+      handleCloseRelativeSelectModal();
    };
 
-   const handleAddGuarantor = () => {
-      setParishionerSelectAction(ParishionerSelectAction.AddGuarantor);
-      setParishionerSelectModalSelectedOptions(guarantor ? [guarantor] : []);
-      setOpenParishionerSelectModal(true);
+   const handleAddRelative = (relativeType: RelativeType) => {
+      switch (relativeType) {
+         case RelativeType.Father:
+            setRelativeSelectModalSelectedOptions(father ? [father] : []);
+            break;
+
+         case RelativeType.Mother:
+            setRelativeSelectModalSelectedOptions(mother ? [mother] : []);
+            break;
+
+         case RelativeType.MarriagePartner:
+            setRelativeSelectModalSelectedOptions(marriagePartner ? [marriagePartner] : []);
+            break;
+
+         case RelativeType.Guarantor:
+            setRelativeSelectModalSelectedOptions(guarantor ? [guarantor] : []);
+            break;
+
+         case RelativeType.Children:
+            setRelativeSelectModalSelectedOptions([]);
+            break;
+
+         default:
+            break;
+      }
+
+      setWorkingRelativeType(relativeType);
+      setOpenRelativeSelectModal(true);
    };
 
-   const genParishionerTitle = (data: ParishionerBasicData): string =>
-      [
-         data.christianName,
-         data.dateOfBirth ? moment(data.dateOfBirth).format(DateFormat) : undefined,
-         data.parishName,
-      ]
-         .filter((e) => e)
-         .join(' • ');
+   const handleClickBtnAddRelative = (relativeType: RelativeType) => {
+      handleAddRelative(relativeType);
+   };
+
+   const handleRemoveRelative = (relativeType: RelativeType, options?: RemoveRelativeOptions) => {
+      switch (relativeType) {
+         case RelativeType.Father:
+            setFather(undefined);
+            break;
+
+         case RelativeType.Mother:
+            setMother(undefined);
+            break;
+
+         case RelativeType.MarriagePartner:
+            setMarriagePartner(undefined);
+            break;
+
+         case RelativeType.Guarantor:
+            setGuarantor(undefined);
+            break;
+
+         case RelativeType.Children:
+            setChildren((prev) => {
+               const index = (prev ?? []).findIndex((c) => c.id === options?.childrenId);
+               const newChildren = [...(prev ?? [])];
+               if (index > -1) {
+                  newChildren.splice(index, 1);
+               }
+
+               return newChildren;
+            });
+            break;
+
+         default:
+            break;
+      }
+   };
+
+   const genParishionerTitle = useMemo(
+      () =>
+         (data: ParishionerBasicData): string =>
+            [
+               data.christianName,
+               data.dateOfBirth ? moment(data.dateOfBirth).format(DateFormat) : undefined,
+               data.parishName,
+            ]
+               .filter((e) => e)
+               .join(' • '),
+      []
+   );
+
+   const handleClickBtnAddChildren = () => {
+      handleAddRelative(RelativeType.Children);
+   };
+
+   const handleReselectChild = (child: ParishionerBasicData) => {
+      setReselectedChild(child);
+      setWorkingRelativeType(RelativeType.Children);
+      setRelativeSelectModalSelectedOptions([child]);
+      setOpenRelativeSelectModal(true);
+   };
 
    useEffect(() => {
       if (!isCreating) {
@@ -149,7 +281,11 @@ export function ParishionerDetailPage() {
             dateOfHolyOrder: dayjs(parishionerDetail.dateOfHolyOrder),
             dateOfDeath: dayjs(parishionerDetail.dateOfDeath),
          });
+         setFather(parishionerDetail.father);
+         setMother(parishionerDetail.mother);
          setGuarantor(parishionerDetail.guarantor);
+         setMarriagePartner(parishionerDetail.wifeOrHusband);
+         setChildren(parishionerDetail.children);
          dispatch(parishionerActions.fetchParishionerList({ page: 1, limit: 5 }));
       }
    }, [dispatch, parishionerDetail, reset]);
@@ -247,30 +383,61 @@ export function ParishionerDetailPage() {
                            <div className="-mt-4 space-y-3">
                               <div>
                                  <FormFieldLabel>Cha</FormFieldLabel>
-                                 <ParishionerCard
-                                    fullName="Trần Văn B"
-                                    avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    title="Juse • 17/03/1975"
-                                    style={ParishionerCardStyle.actions}
-                                 />
+                                 {father ? (
+                                    <ParishionerCard
+                                       fullName={father.fullName}
+                                       title={genParishionerTitle(father)}
+                                       style={ParishionerCardStyle.actions}
+                                       onReselect={() => handleAddRelative(RelativeType.Father)}
+                                       onRemove={() => handleRemoveRelative(RelativeType.Father)}
+                                    />
+                                 ) : (
+                                    <AddParishionerButton
+                                       onClick={() =>
+                                          handleClickBtnAddRelative(RelativeType.Father)
+                                       }
+                                    />
+                                 )}
                               </div>
                               <div>
                                  <FormFieldLabel>Mẹ</FormFieldLabel>
-                                 <ParishionerCard
-                                    fullName="Vũ Thị C"
-                                    avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    title="Maria • 17/03/1975"
-                                    style={ParishionerCardStyle.actions}
-                                 />
+                                 {mother ? (
+                                    <ParishionerCard
+                                       fullName={mother.fullName}
+                                       title={genParishionerTitle(mother)}
+                                       style={ParishionerCardStyle.actions}
+                                       onReselect={() => handleAddRelative(RelativeType.Mother)}
+                                       onRemove={() => handleRemoveRelative(RelativeType.Mother)}
+                                    />
+                                 ) : (
+                                    <AddParishionerButton
+                                       onClick={() =>
+                                          handleClickBtnAddRelative(RelativeType.Mother)
+                                       }
+                                    />
+                                 )}
                               </div>
                               <div>
                                  <FormFieldLabel>Chồng/Vợ</FormFieldLabel>
-                                 <ParishionerCard
-                                    fullName="Vũ Thị E"
-                                    avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    title="Maria • 17/03/1975"
-                                    style={ParishionerCardStyle.actions}
-                                 />
+                                 {marriagePartner ? (
+                                    <ParishionerCard
+                                       fullName={marriagePartner.fullName}
+                                       title={genParishionerTitle(marriagePartner)}
+                                       style={ParishionerCardStyle.actions}
+                                       onReselect={() =>
+                                          handleAddRelative(RelativeType.MarriagePartner)
+                                       }
+                                       onRemove={() =>
+                                          handleRemoveRelative(RelativeType.MarriagePartner)
+                                       }
+                                    />
+                                 ) : (
+                                    <AddParishionerButton
+                                       onClick={() =>
+                                          handleClickBtnAddRelative(RelativeType.MarriagePartner)
+                                       }
+                                    />
+                                 )}
                               </div>
                               <div>
                                  <FormFieldLabel>Người bảo lãnh</FormFieldLabel>
@@ -279,41 +446,53 @@ export function ParishionerDetailPage() {
                                        fullName={guarantor.fullName}
                                        title={genParishionerTitle(guarantor)}
                                        style={ParishionerCardStyle.actions}
-                                       onReselect={handleAddGuarantor}
+                                       onReselect={() => handleAddRelative(RelativeType.Guarantor)}
+                                       onRemove={() => handleRemoveRelative(RelativeType.Guarantor)}
                                     />
                                  ) : (
-                                    <Button
-                                       icon={<PlusIcon className="w-4 h-4" />}
-                                       onClick={handleAddGuarantor}
-                                    >
-                                       Thêm
-                                    </Button>
+                                    <AddParishionerButton
+                                       onClick={() =>
+                                          handleClickBtnAddRelative(RelativeType.Guarantor)
+                                       }
+                                    />
                                  )}
                               </div>
                               <div className="pt-2">
                                  <div className="flex justify-between">
-                                    <FormFieldLabel>Con (2)</FormFieldLabel>
-                                    <Button
-                                       icon={<PlusIcon className="w-4 h-4" />}
-                                       shape="circle"
-                                       size="sm"
-                                    />
+                                    <FormFieldLabel>Con ({children?.length ?? 0})</FormFieldLabel>
+                                    {Boolean(children?.length) && (
+                                       <Button
+                                          icon={<PlusIcon className="w-4 h-4" />}
+                                          shape="circle"
+                                          size="sm"
+                                          onClick={handleClickBtnAddChildren}
+                                       />
+                                    )}
                                  </div>
                                  <div className="mt-2 space-y-2">
-                                    {Array.from(Array(2).keys()).map((_, idx) => (
-                                       <div key={idx} className="w-full">
-                                          <ParishionerCard
-                                             fullName={`Nguyễn Thị D${idx + 1}`}
-                                             avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                             title="Maria • 17/03/2011"
-                                             style={ParishionerCardStyle.actions}
-                                          />
-                                       </div>
+                                    {children?.map((c) => (
+                                       <ParishionerCard
+                                          key={c.id}
+                                          fullName={c.fullName}
+                                          title={genParishionerTitle(c)}
+                                          style={ParishionerCardStyle.actions}
+                                          onReselect={() => handleReselectChild(c)}
+                                          onRemove={() =>
+                                             handleRemoveRelative(RelativeType.Children, {
+                                                childrenId: c.id,
+                                             })
+                                          }
+                                       />
                                     ))}
                                  </div>
-                                 <div className="mt-3">
-                                    <Button>Xem thêm</Button>
-                                 </div>
+                                 {/* {(children?.length ?? 0) > 2 && (
+                                    <div className="mt-3">
+                                       <Button>Xem thêm</Button>
+                                    </div>
+                                 )} */}
+                                 {!Boolean(children?.length) && (
+                                    <AddParishionerButton onClick={handleClickBtnAddChildren} />
+                                 )}
                               </div>
                            </div>
 
@@ -370,20 +549,26 @@ export function ParishionerDetailPage() {
                         <Button icon={<RefreshIcon />} size="lg" onClick={handleResetForm}>
                            Khôi phục
                         </Button>
-                        <Button type="primary" icon={<CheckIcon />} size="lg">
+                        <LoadingButton
+                           variant="contained"
+                           loading={saveLoading}
+                           loadingPosition="start"
+                           startIcon={<CheckOutlined />}
+                           type="submit"
+                        >
                            {isCreating ? 'Hoàn tất' : 'Lưu thay đổi'}
-                        </Button>
+                        </LoadingButton>
                      </div>
                   </div>
                </div>
             </form>
          </div>
          <ParishionerSelectModal
-            selectedOptions={parishionerSelectModalSelectedOptions}
-            options={parishionerSelectModalOptions}
-            open={openParishionerSelectModal}
-            onClose={handleCloseParishionerSelectModal}
-            onSave={handleSaveParishionerSelectModal}
+            selectedOptions={relativeSelectModalSelectedOptions}
+            options={relativeSelectModalOptions}
+            open={openRelativeSelectModal}
+            onClose={handleCloseRelativeSelectModal}
+            onSave={handleSaveRelativeSelectModal}
          />
       </>
    );

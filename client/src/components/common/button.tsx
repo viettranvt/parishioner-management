@@ -18,7 +18,7 @@ export function Button({
    className,
    children,
    type = 'default',
-   htmlType,
+   htmlType = 'button',
    size = 'md',
    outlined = undefined,
    contrast = false,

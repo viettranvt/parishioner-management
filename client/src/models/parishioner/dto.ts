@@ -21,7 +21,11 @@ export interface ParishionerDetailResponseDTO extends ParishionerBasicResponseDT
    dateOfWedding?: string;
    dateOfHolyOrder?: string;
    dateOfDeath?: string;
+   father?: ParishionerBasicResponseDTO;
+   mother?: ParishionerBasicResponseDTO;
    guarantor?: ParishionerBasicResponseDTO;
+   wifeOrHusband?: ParishionerBasicResponseDTO;
+   children?: ParishionerBasicResponseDTO[];
 }
 
 export interface ParishionerCreateRequestDTO {
@@ -39,7 +43,11 @@ export interface ParishionerCreateRequestDTO {
    dateOfWedding?: number; // milliseconds
    dateOfHolyOrder?: number; // milliseconds
    dateOfDeath?: number; // milliseconds
+   fatherId?: ID;
+   motherId?: ID;
    guarantorId?: ID;
+   wifeOrHusbandId?: ID;
+   childIds?: ID[];
 }
 
 export interface ParishionerUpdateRequestDTO {
@@ -58,5 +66,9 @@ export interface ParishionerUpdateRequestDTO {
    dateOfWedding?: number; // milliseconds
    dateOfHolyOrder?: number; // milliseconds
    dateOfDeath?: number; // milliseconds
+   fatherId?: ID;
+   motherId?: ID;
    guarantorId?: ID;
+   wifeOrHusbandId?: ID;
+   childIds?: ID[];
 }
