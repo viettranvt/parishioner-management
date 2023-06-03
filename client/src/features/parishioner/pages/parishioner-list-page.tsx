@@ -11,7 +11,6 @@ import {
    parishionerActions,
    selectParishionerFilter,
    selectParishionerList,
-   selectParishionerLoading,
    selectParishionerPagination,
 } from 'features/parishioner/parishioner-slice';
 import { Op, ParishionerBasicData, ParishionerFilterFormData } from 'models';
@@ -23,7 +22,6 @@ export default function ParishionerListPage() {
    const parishioners = useAppSelector(selectParishionerList);
    const pagination = useAppSelector(selectParishionerPagination);
    const filter = useAppSelector(selectParishionerFilter);
-   const loading = useAppSelector(selectParishionerLoading);
 
    const handlePageChange = (_: ChangeEvent<unknown>, page: number) => {
       dispatch(
@@ -34,7 +32,12 @@ export default function ParishionerListPage() {
       );
    };
 
-   const handleFilterSubmit = (filterData: ParishionerFilterFormData) => {
+   const handleFilterSubmit = (filterData?: ParishionerFilterFormData) => {
+      if (!filterData) {
+         dispatch(parishionerActions.setFilter({ ...filter, page: 1, filters: undefined }));
+         return;
+      }
+
       const {
          fullName,
          christianNames,
@@ -127,10 +130,10 @@ export default function ParishionerListPage() {
                </Button>
             </div>
          </div>
-         <div className="card bg-base-100 mt-6 p-4 shadow-lg">
+         <div className="p-4 mt-6 shadow-lg card bg-base-100">
             <div className="grid grid-cols-4 gap-4 pt-3">
                <div className="col-span-1">
-                  <div className="card pl-2 pr-6">
+                  <div className="pl-2 pr-6 card">
                      <ParishionerFilterForm onSubmit={handleFilterSubmit} />
                   </div>
                </div>
@@ -146,7 +149,6 @@ export default function ParishionerListPage() {
                         count={Math.ceil(pagination.total / pagination.limit)}
                         page={pagination.page}
                         onChange={handlePageChange}
-                        disabled={loading}
                      />
                   </div>
                </div>

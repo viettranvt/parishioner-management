@@ -75,3 +75,11 @@ export const Paths = {
    defaultFemaleAvatar:
       'https://cdn.vectorstock.com/i/preview-1x/23/44/person-gray-photo-placeholder-woman-vector-23512344.jpg',
 };
+
+export enum ErrorType {
+   LogInFailed,
+}
+
+export const ErrorMessages = {
+   [ErrorType.LogInFailed]: 'Tên đăng nhập hoặc mật khẩu không chính xác',
+};

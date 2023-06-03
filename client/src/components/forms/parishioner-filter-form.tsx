@@ -1,3 +1,5 @@
+import { Clear, FilterAlt } from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
    Box,
    Chip,
@@ -10,12 +12,11 @@ import {
    Theme,
    useTheme,
 } from '@mui/material';
-import { Button, DateRangePickerDates } from 'components/common';
-import { DateRangeField, InputField } from 'components/forms/fields';
-import { FilterIcon } from 'components/icons';
+import { DateRangePickerDates } from 'components/common';
+import { DateRangeField, DateRangeFieldMethods, InputField } from 'components/forms/fields';
 import { FemaleChristianNames, MaleChristianNames } from 'constants/strings';
 import { DateRange, ParishionerFilterFormData } from 'models';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const ITEM_HEIGHT = 48;
@@ -38,14 +39,25 @@ function getChristianNameSelectStyles(name: string, personName: string[], theme:
    };
 }
 
-export interface ParishionerFilterFormProps {
-   initialValues?: ParishionerFilterFormData;
-   onSubmit?: (formValues: ParishionerFilterFormData) => void;
+interface ActionButtonProps {
+   loading?: boolean;
 }
 
-export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFilterFormProps) {
+export interface ParishionerFilterFormProps {
+   initialValues?: ParishionerFilterFormData;
+   btnSubmitProps?: ActionButtonProps;
+   btnClearProps?: ActionButtonProps;
+   onSubmit?: (formValues?: ParishionerFilterFormData) => void;
+}
+
+export function ParishionerFilterForm({
+   onSubmit,
+   initialValues,
+   btnSubmitProps,
+   btnClearProps,
+}: ParishionerFilterFormProps) {
    const theme = useTheme();
-   const { control, handleSubmit } = useForm<ParishionerFilterFormData>({
+   const { control, handleSubmit, reset } = useForm<ParishionerFilterFormData>({
       defaultValues: {
          ...initialValues,
          fullName: initialValues?.fullName || '',
@@ -56,6 +68,10 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
    const [firstCommunionDateRange, setFirstCommunionDateRange] = useState<DateRange>();
    const [confirmationDateRange, setConfirmationDateRange] = useState<DateRange>();
    const [weddingDateRange, setWeddingDateRange] = useState<DateRange>();
+   const baptismDateRangeFieldRef = useRef<DateRangeFieldMethods>(null);
+   const firstCommunionDateRangeFieldRef = useRef<DateRangeFieldMethods>(null);
+   const confirmationDateRangeFieldRef = useRef<DateRangeFieldMethods>(null);
+   const weddingDateRangeFieldRef = useRef<DateRangeFieldMethods>(null);
 
    const handleChristianNamesChange = (e: SelectChangeEvent<typeof christianNames>) => {
       const {
@@ -94,78 +110,123 @@ export function ParishionerFilterForm({ onSubmit, initialValues }: ParishionerFi
       });
    };
 
+   const clear = () => {
+      reset();
+      setChristianNames([]);
+      baptismDateRangeFieldRef.current?.clear();
+      firstCommunionDateRangeFieldRef.current?.clear();
+      confirmationDateRangeFieldRef.current?.clear();
+      weddingDateRangeFieldRef.current?.clear();
+      onSubmit?.(undefined);
+   };
+
+   const submit = () => {
+      handleSubmit(handleFormSubmit)();
+   };
+
    return (
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-         <InputField name="fullName" label="Họ tên" control={control} />
+      <>
+         <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <InputField name="fullName" label="Họ tên" control={control} />
 
-         <Box mt={3}>
-            <FormControl fullWidth size="small">
-               <InputLabel id="christian-name-select-label">Tên thánh</InputLabel>
-               <Select
-                  labelId="christian-name-select-label"
-                  id="christian-name-select"
-                  multiple
-                  value={christianNames}
-                  onChange={handleChristianNamesChange}
-                  label="Tên thánh"
-                  MenuProps={MenuProps}
-                  renderValue={(selected) => (
-                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                           <Chip key={value} label={value} size="small" />
-                        ))}
-                     </Box>
-                  )}
-               >
-                  <ListSubheader>Nam</ListSubheader>
-                  {MaleChristianNames.map((name) => (
-                     <MenuItem
-                        key={name}
-                        value={name}
-                        style={getChristianNameSelectStyles(name, christianNames, theme)}
-                     >
-                        {name}
-                     </MenuItem>
-                  ))}
-                  <ListSubheader>Nữ</ListSubheader>
-                  {FemaleChristianNames.map((name) => (
-                     <MenuItem
-                        key={name}
-                        value={name}
-                        style={getChristianNameSelectStyles(name, christianNames, theme)}
-                     >
-                        {name}
-                     </MenuItem>
-                  ))}
-               </Select>
-            </FormControl>
-         </Box>
+            <Box mt={3}>
+               <FormControl fullWidth size="small">
+                  <InputLabel id="christian-name-select-label">Tên thánh</InputLabel>
+                  <Select
+                     labelId="christian-name-select-label"
+                     id="christian-name-select"
+                     multiple
+                     value={christianNames}
+                     onChange={handleChristianNamesChange}
+                     label="Tên thánh"
+                     MenuProps={MenuProps}
+                     renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                           {selected.map((value) => (
+                              <Chip key={value} label={value} size="small" />
+                           ))}
+                        </Box>
+                     )}
+                  >
+                     <ListSubheader>Nam</ListSubheader>
+                     {MaleChristianNames.map((name) => (
+                        <MenuItem
+                           key={name}
+                           value={name}
+                           style={getChristianNameSelectStyles(name, christianNames, theme)}
+                        >
+                           {name}
+                        </MenuItem>
+                     ))}
+                     <ListSubheader>Nữ</ListSubheader>
+                     {FemaleChristianNames.map((name) => (
+                        <MenuItem
+                           key={name}
+                           value={name}
+                           style={getChristianNameSelectStyles(name, christianNames, theme)}
+                        >
+                           {name}
+                        </MenuItem>
+                     ))}
+                  </Select>
+               </FormControl>
+            </Box>
 
-         <Box mt={3}>
-            <DateRangeField label="Ngày rửa tội" onChange={handleBaptismDateChange} />
-         </Box>
+            <Box mt={3}>
+               <DateRangeField
+                  ref={baptismDateRangeFieldRef}
+                  label="Ngày rửa tội"
+                  onChange={handleBaptismDateChange}
+               />
+            </Box>
 
-         <Box mt={3}>
-            <DateRangeField
-               label="Ngày rước lễ lần đầu"
-               onChange={handleFirstCommunionDateChange}
-            />
-         </Box>
+            <Box mt={3}>
+               <DateRangeField
+                  ref={firstCommunionDateRangeFieldRef}
+                  label="Ngày rước lễ lần đầu"
+                  onChange={handleFirstCommunionDateChange}
+               />
+            </Box>
 
-         <Box mt={3}>
-            <DateRangeField label="Ngày thêm sức" onChange={handleConfirmationDateChange} />
-         </Box>
+            <Box mt={3}>
+               <DateRangeField
+                  ref={confirmationDateRangeFieldRef}
+                  label="Ngày thêm sức"
+                  onChange={handleConfirmationDateChange}
+               />
+            </Box>
 
-         <Box mt={3}>
-            <DateRangeField label="Ngày cưới" onChange={handleWeddingDateChange} />
-         </Box>
+            <Box mt={3}>
+               <DateRangeField
+                  ref={weddingDateRangeFieldRef}
+                  label="Ngày cưới"
+                  onChange={handleWeddingDateChange}
+               />
+            </Box>
+         </form>
 
          <div className="flex gap-2 mt-5">
-            <Button>Xoá</Button>
-            <Button type="primary" htmlType="submit" icon={<FilterIcon className="w-5 h-5" />}>
+            <LoadingButton
+               onClick={clear}
+               variant="outlined"
+               className="w-1/2"
+               loading={btnSubmitProps?.loading}
+               loadingPosition="start"
+               startIcon={<Clear />}
+            >
+               Xoá
+            </LoadingButton>
+            <LoadingButton
+               onClick={submit}
+               variant="contained"
+               className="w-1/2"
+               loading={btnSubmitProps?.loading}
+               loadingPosition="start"
+               startIcon={<FilterAlt />}
+            >
                Lọc
-            </Button>
+            </LoadingButton>
          </div>
-      </form>
+      </>
    );
 }

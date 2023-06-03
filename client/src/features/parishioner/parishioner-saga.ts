@@ -59,14 +59,14 @@ function* updateParishioner(action: PayloadAction<ParishionerUpdateRequestDTO>) 
 
       // Notify success
       yield put(parishionerActions.updateParishionerSuccess());
-      toast.success('Cập nhật thành công');
+      toast.success('Đã lưu thông tin');
 
       // Reload detail
       yield put(parishionerActions.fetchParishionerDetail(action.payload.id));
    } catch (error) {
       // Notify error
       yield put(parishionerActions.updateParishionerFailed());
-      toast.error('Cập nhật thất bại');
+      toast.error('Lưu thông tin thất bại');
    }
 }
 

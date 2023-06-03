@@ -1,4 +1,4 @@
-import { DateRange } from '@mui/icons-material';
+import { DateRange, Close } from '@mui/icons-material';
 import {
    Box,
    Button,
@@ -12,7 +12,14 @@ import {
 import { DateRangePicker, DateRangePickerDates } from 'components/common';
 import { DateFormat } from 'constants/strings';
 import moment from 'moment';
-import { useCallback, useEffect, useState } from 'react';
+import React, {
+   forwardRef,
+   useCallback,
+   useEffect,
+   useState,
+   useImperativeHandle,
+   ForwardedRef,
+} from 'react';
 
 const pickerContentStyle = {
    position: 'absolute' as 'absolute',
@@ -30,15 +37,18 @@ export interface DateRangeFieldProps {
    onChange?: (dateRange?: DateRangePickerDates) => void;
 }
 
-export function DateRangeField({
-   label,
-   customSize = 'small',
-   onChange,
-   initialValues,
-}: DateRangeFieldProps) {
+export interface DateRangeFieldMethods {
+   clear: () => void;
+}
+
+export const DateRangeField = forwardRef(function DateRangeField(
+   { label, customSize = 'small', onChange, initialValues }: DateRangeFieldProps,
+   ref: ForwardedRef<DateRangeFieldMethods>
+) {
    const [text, setText] = useState<string>('');
+   const showBtnClear = !!text;
    const [showPicker, setShowPicker] = useState<boolean>(false);
-   const [selectedDateRange, setSelectedDateRange] = useState<DateRangePickerDates>();
+   const [selectedDateRange, setSelectedDateRange] = useState<DateRangePickerDates | undefined>();
 
    const handleShowPicker = () => {
       setShowPicker(true);
@@ -70,9 +80,28 @@ export function DateRangeField({
       closePicker();
    };
 
+   const handleClearPicker = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      clearPicker();
+   };
+
+   const clearPicker = useCallback(() => {
+      setText('');
+      setSelectedDateRange(undefined);
+      onChange?.(undefined);
+   }, [onChange]);
+
    useEffect(() => {
       updateText({ ...initialValues });
    }, [initialValues, updateText]);
+
+   useImperativeHandle(
+      ref,
+      () => ({
+         clear: clearPicker,
+      }),
+      [clearPicker]
+   );
 
    return (
       <>
@@ -80,7 +109,6 @@ export function DateRangeField({
             <InputLabel>{label}</InputLabel>
             <OutlinedInput
                onClick={handleShowPicker}
-               onMouseDown={handleShowPicker}
                readOnly
                style={{ paddingRight: 0 }}
                value={text}
@@ -88,8 +116,8 @@ export function DateRangeField({
                label={label}
                endAdornment={
                   <InputAdornment position="end">
-                     <IconButton onClick={handleShowPicker}>
-                        <DateRange />
+                     <IconButton onClick={showBtnClear ? handleClearPicker : handleShowPicker}>
+                        {showBtnClear ? <Close /> : <DateRange />}
                      </IconButton>
                   </InputAdornment>
                }
@@ -107,4 +135,4 @@ export function DateRangeField({
          </Modal>
       </>
    );
-}
+});

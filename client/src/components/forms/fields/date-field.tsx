@@ -35,6 +35,7 @@ export function DateField({ name, control, label, size = 'small' }: DateFieldPro
                   helperText: error?.message,
                },
             }}
+            onChange={onChange}
          />
       </FormControl>
    );

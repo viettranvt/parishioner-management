@@ -19,7 +19,7 @@ const authSlice = createSlice({
    initialState,
    reducers: {
       login(state, action: PayloadAction<AuthLoginFormData>) {
-         state.logging = false;
+         state.logging = true;
       },
       loginSuccess(state, action: PayloadAction<AuthLoginData>) {
          state.logging = false;

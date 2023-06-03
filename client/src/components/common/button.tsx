@@ -3,6 +3,7 @@ import { ButtonHTMLAttributes, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type ButtonProps = {
+   loading?: boolean;
    children?: ReactNode;
    type?: 'primary' | 'default';
    size?: 'sm' | 'md' | 'lg';
@@ -15,6 +16,7 @@ export type ButtonProps = {
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;
 
 export function Button({
+   loading = false,
    className,
    children,
    type = 'default',
@@ -73,7 +75,7 @@ export function Button({
          {...rest}
       >
          {icon !== undefined && children !== undefined && (
-            <div className="flex justify-center items-center">
+            <div className="flex items-center justify-center">
                <div
                   className={twMerge(
                      classNames('mr-2', {
