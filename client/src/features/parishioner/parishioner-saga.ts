@@ -30,6 +30,18 @@ function* fetchParishionerList(action: PayloadAction<PaginatedListParams>) {
    }
 }
 
+function* fetchParishionerOptions(action: PayloadAction<PaginatedListParams>) {
+   try {
+      const response: PaginatedListResponse<ParishionerBasicResponseDTO> = yield call(
+         parishionerApi.getList,
+         action.payload
+      );
+      yield put(parishionerActions.fetchParishionerOptionsSuccess(response));
+   } catch (error) {
+      yield put(parishionerActions.fetchParishionerOptionsFailed());
+   }
+}
+
 function* fetchParishionerDetail(action: PayloadAction<ID>) {
    try {
       const response: ParishionerDetailResponseDTO = yield call(
@@ -83,6 +95,7 @@ function* deleteParishioner(action: PayloadAction<ID>) {
 
 export default function* parishionerSaga() {
    yield takeLatest(parishionerActions.fetchParishionerList, fetchParishionerList);
+   yield takeLatest(parishionerActions.fetchParishionerOptions, fetchParishionerOptions);
    yield takeLatest(parishionerActions.fetchParishionerDetail, fetchParishionerDetail);
    yield takeLatest(parishionerActions.createParishioner, createParishioner);
    yield takeLatest(parishionerActions.updateParishioner, updateParishioner);

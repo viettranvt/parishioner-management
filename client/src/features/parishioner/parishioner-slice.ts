@@ -55,6 +55,15 @@ const parishionerSlice = createSlice({
          state.list = action.payload.data;
          state.pagination = action.payload.paging;
       },
+      fetchParishionerOptions(state, action: PayloadAction<PaginatedListParams>) {},
+      fetchParishionerOptionsSuccess(
+         state,
+         action: PayloadAction<PaginatedListResponse<ParishionerBasicData>>
+      ) {
+         state.list = [...state.list, ...action.payload.data];
+         state.pagination = action.payload.paging;
+      },
+      fetchParishionerOptionsFailed(state) {},
       fetchParishionerListFailed(state) {
          state.loading = false;
       },
@@ -98,6 +107,9 @@ const parishionerSlice = createSlice({
 
       setFilter(state, action: PayloadAction<PaginatedListParams>) {
          state.filter = action.payload;
+      },
+      clearParishionerDetail(state) {
+         state.detail = undefined;
       },
    },
 });

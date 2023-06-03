@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { Button as CustomButton, Dropdown } from 'components/common';
 import { MoreVerticalIcon } from 'components/icons';
+import { PageId, Pages } from 'constants/pages';
+import { ID } from 'models';
 import { useMemo } from 'react';
 import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
@@ -11,6 +13,7 @@ export enum ParishionerCardStyle {
 }
 
 interface SimpleInfoProps {
+   id: ID;
    fullName: string;
    avatar?: string;
    title?: string;
@@ -54,7 +57,7 @@ function SimpleInfo({ fullName, avatar, title, style }: SimpleInfoProps) {
             >
                {fullName}
             </span>
-            {hasTitle && <span className="text-xs text-gray-500 mt-1">{title}</span>}
+            {hasTitle && <span className="mt-1 text-xs text-gray-500">{title}</span>}
          </div>
       </div>
    );
@@ -70,15 +73,18 @@ export function ParishionerCard({
       return <SimpleInfo {...simpleInfoProps} />;
    }
 
+   const detailPath =
+      Pages.get(PageId.ParishionerDetail)?.path.replace(':id', simpleInfoProps.id) ?? '';
+
    return (
       <div className="card p-1.5 rounded-lg flex justify-between items-center flex-row bg-slate-100 hover:bg-primary-light duration-150">
          <SimpleInfo style={style} {...simpleInfoProps} />
          <Dropdown
             menuItems={[
-               <Link key="detail" to="/">
+               <Link key="detail" to={detailPath}>
                   Chi tiết
                </Link>,
-               <Link key="edit-info" to="/">
+               <Link key="edit-info" to={detailPath}>
                   Sửa thông tin
                </Link>,
                <span key="reselect" onClick={onReselect}>

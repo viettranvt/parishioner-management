@@ -1,11 +1,13 @@
 import { CheckOutlined } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { history } from 'app/store';
 import { ParishionerSelectModal } from 'components';
 import { Button as CustomButon, FormFieldLabel } from 'components/common';
 import { DateField, InputField, RadioField, SelectField } from 'components/forms/fields';
 import { ArrowLeftIcon, PlusIcon, RefreshIcon } from 'components/icons';
 import { ParishionerCard, ParishionerCardStyle } from 'components/parishioner-card';
+import { ApiParamField } from 'constants/api';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
 import { DateFormat, MaleChristianNames, ParishNames, Paths } from 'constants/strings';
@@ -15,9 +17,16 @@ import {
    parishionerActions,
    selectParishionerDetail,
    selectParishionerList,
+   selectParishionerPagination,
 } from 'features/parishioner/parishioner-slice';
 import { cloneDeep } from 'lodash';
-import { ID, ParishionerBasicData, ParishionerCreateRequestDTO, ParishionerFormData } from 'models';
+import {
+   ID,
+   Op,
+   ParishionerBasicData,
+   ParishionerCreateRequestDTO,
+   ParishionerFormData,
+} from 'models';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -40,15 +49,14 @@ export function ParishionerDetailPage() {
    const isCreating = useMemo(() => !id, [id]);
    const dispatch = useAppDispatch();
    const parishionerDetail = useAppSelector(selectParishionerDetail);
-   const relativeSelectModalOptions = useAppSelector(selectParishionerList);
+   const parishioners = useAppSelector(selectParishionerList);
+   const parishionerPagination = useAppSelector(selectParishionerPagination);
    const [father, setFather] = useState<ParishionerBasicData>();
    const [mother, setMother] = useState<ParishionerBasicData>();
    const [marriagePartner, setMarriagePartner] = useState<ParishionerBasicData>();
    const [guarantor, setGuarantor] = useState<ParishionerBasicData>();
    const [children, setChildren] = useState<ParishionerBasicData[]>();
-   const [relativeSelectModalSelectedOptions, setRelativeSelectModalSelectedOptions] = useState<
-      ParishionerBasicData[]
-   >([]);
+   const [selectedParishioners, setSelectedParishioner] = useState<ParishionerBasicData[]>([]);
    const [workingRelativeType, setWorkingRelativeType] = useState<RelativeType | undefined>();
    const [reselectedChild, setReselectedChild] = useState<ParishionerBasicData>();
 
@@ -169,23 +177,23 @@ export function ParishionerDetailPage() {
    const handleAddRelative = (relativeType: RelativeType) => {
       switch (relativeType) {
          case RelativeType.Father:
-            setRelativeSelectModalSelectedOptions(father ? [father] : []);
+            setSelectedParishioner(father ? [father] : []);
             break;
 
          case RelativeType.Mother:
-            setRelativeSelectModalSelectedOptions(mother ? [mother] : []);
+            setSelectedParishioner(mother ? [mother] : []);
             break;
 
          case RelativeType.MarriagePartner:
-            setRelativeSelectModalSelectedOptions(marriagePartner ? [marriagePartner] : []);
+            setSelectedParishioner(marriagePartner ? [marriagePartner] : []);
             break;
 
          case RelativeType.Guarantor:
-            setRelativeSelectModalSelectedOptions(guarantor ? [guarantor] : []);
+            setSelectedParishioner(guarantor ? [guarantor] : []);
             break;
 
          case RelativeType.Children:
-            setRelativeSelectModalSelectedOptions([]);
+            setSelectedParishioner([]);
             break;
 
          default:
@@ -255,7 +263,7 @@ export function ParishionerDetailPage() {
    const handleReselectChild = (child: ParishionerBasicData) => {
       setReselectedChild(child);
       setWorkingRelativeType(RelativeType.Children);
-      setRelativeSelectModalSelectedOptions([child]);
+      setSelectedParishioner([child]);
       setOpenRelativeSelectModal(true);
    };
 
@@ -263,6 +271,10 @@ export function ParishionerDetailPage() {
       if (!isCreating) {
          dispatch(parishionerActions.fetchParishionerDetail(id!));
       }
+
+      return () => {
+         dispatch(parishionerActions.clearParishionerDetail());
+      };
    }, [dispatch, id, isCreating]);
 
    useEffect(() => {
@@ -283,18 +295,22 @@ export function ParishionerDetailPage() {
             dateOfHolyOrder: dayjs(parishionerDetail.dateOfHolyOrder),
             dateOfDeath: dayjs(parishionerDetail.dateOfDeath),
          });
+
          setFather(parishionerDetail.father);
          setMother(parishionerDetail.mother);
          setGuarantor(parishionerDetail.guarantor);
          setMarriagePartner(parishionerDetail.wifeOrHusband);
          setChildren(parishionerDetail.children);
-         dispatch(parishionerActions.fetchParishionerList({ page: 1, limit: 5 }));
       }
    }, [dispatch, parishionerDetail, reset]);
 
    useEffect(() => {
       reset(defaultValues);
    }, [defaultValues, reset]);
+
+   useEffect(() => {
+      dispatch(parishionerActions.fetchParishionerOptions({ page: 1, limit: 10 }));
+   }, [dispatch]);
 
    return (
       <>
@@ -387,6 +403,7 @@ export function ParishionerDetailPage() {
                                  <FormFieldLabel>Cha</FormFieldLabel>
                                  {father ? (
                                     <ParishionerCard
+                                       id={father.id}
                                        fullName={father.fullName}
                                        title={genParishionerTitle(father)}
                                        style={ParishionerCardStyle.actions}
@@ -405,6 +422,7 @@ export function ParishionerDetailPage() {
                                  <FormFieldLabel>Mẹ</FormFieldLabel>
                                  {mother ? (
                                     <ParishionerCard
+                                       id={mother.id}
                                        fullName={mother.fullName}
                                        title={genParishionerTitle(mother)}
                                        style={ParishionerCardStyle.actions}
@@ -423,6 +441,7 @@ export function ParishionerDetailPage() {
                                  <FormFieldLabel>Chồng/Vợ</FormFieldLabel>
                                  {marriagePartner ? (
                                     <ParishionerCard
+                                       id={marriagePartner.id}
                                        fullName={marriagePartner.fullName}
                                        title={genParishionerTitle(marriagePartner)}
                                        style={ParishionerCardStyle.actions}
@@ -445,6 +464,7 @@ export function ParishionerDetailPage() {
                                  <FormFieldLabel>Người bảo lãnh</FormFieldLabel>
                                  {guarantor ? (
                                     <ParishionerCard
+                                       id={guarantor.id}
                                        fullName={guarantor.fullName}
                                        title={genParishionerTitle(guarantor)}
                                        style={ParishionerCardStyle.actions}
@@ -475,6 +495,7 @@ export function ParishionerDetailPage() {
                                     {children?.map((c) => (
                                        <ParishionerCard
                                           key={c.id}
+                                          id={c.id}
                                           fullName={c.fullName}
                                           title={genParishionerTitle(c)}
                                           style={ParishionerCardStyle.actions}
@@ -548,6 +569,9 @@ export function ParishionerDetailPage() {
                         <Button
                            startIcon={<ArrowLeftIcon className="w-4 h-4" />}
                            variant="outlined"
+                           onClick={() => {
+                              history.back();
+                           }}
                         >
                            Trở lại
                         </Button>
@@ -567,11 +591,31 @@ export function ParishionerDetailPage() {
             </form>
          </div>
          <ParishionerSelectModal
-            selectedOptions={relativeSelectModalSelectedOptions}
-            options={relativeSelectModalOptions}
+            selectedOptions={selectedParishioners}
+            options={parishioners}
             open={openRelativeSelectModal}
             onClose={handleCloseRelativeSelectModal}
             onSave={handleSaveRelativeSelectModal}
+            totalOptions={parishionerPagination.total}
+            fetchOptions={() => {
+               dispatch(
+                  parishionerActions.fetchParishionerOptions({
+                     page: parishionerPagination.page + 1,
+                     limit: parishionerPagination.limit,
+                  })
+               );
+            }}
+            onSearch={(term) => {
+               dispatch(
+                  parishionerActions.fetchParishionerList({
+                     page: 1,
+                     limit: parishionerPagination.limit,
+                     filters: term
+                        ? [{ field: ApiParamField.fullName, op: Op.Like, val: [term] }]
+                        : undefined,
+                  })
+               );
+            }}
          />
       </>
    );
