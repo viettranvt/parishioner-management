@@ -9,6 +9,7 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
    customSize?: 'small' | 'medium';
    rows?: number;
    multiline?: boolean;
+   showAsterisk?: boolean;
 }
 
 export function InputField({
@@ -18,6 +19,7 @@ export function InputField({
    customSize = 'small',
    rows,
    multiline = false,
+   showAsterisk = false,
    ...inputProps
 }: InputFieldProps) {
    const {
@@ -30,7 +32,7 @@ export function InputField({
 
    return (
       <TextField
-         InputLabelProps={{ shrink: true }}
+         InputLabelProps={{ shrink: true, required: showAsterisk }}
          size={customSize}
          fullWidth
          label={label}

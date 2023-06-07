@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { Control, useController } from 'react-hook-form';
 
 export type SelectFieldOptionValue = string | number;
@@ -12,6 +12,7 @@ export interface SelectFieldProps<T extends SelectFieldOptionValue> {
    }>;
    name: string;
    control: Control<any>;
+   showAsterisk?: boolean;
 }
 
 export const SelectField = <T extends SelectFieldOptionValue>({
@@ -20,10 +21,11 @@ export const SelectField = <T extends SelectFieldOptionValue>({
    options,
    name,
    control,
+   showAsterisk = false,
 }: SelectFieldProps<T>) => {
    const {
       field: { value, onChange, onBlur, ref },
-      fieldState: { invalid },
+      fieldState: { invalid, error },
    } = useController({
       name,
       control,
@@ -31,7 +33,7 @@ export const SelectField = <T extends SelectFieldOptionValue>({
 
    return (
       <FormControl fullWidth size={size}>
-         <InputLabel>{label}</InputLabel>
+         <InputLabel required={showAsterisk}>{label}</InputLabel>
          <Select
             name={name}
             label={label}
@@ -47,6 +49,7 @@ export const SelectField = <T extends SelectFieldOptionValue>({
                </MenuItem>
             ))}
          </Select>
+         {error?.message && <FormHelperText error>{error.message}</FormHelperText>}
       </FormControl>
    );
 };

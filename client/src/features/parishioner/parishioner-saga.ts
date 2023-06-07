@@ -59,26 +59,22 @@ function* createParishioner(action: PayloadAction<ParishionerCreateRequestDTO>) 
       yield call(parishionerApi.create, action.payload);
       yield put(parishionerActions.createParishionerSuccess());
       yield put(push(Pages.get(PageId.ParishionerList)?.path ?? ''));
+      toast.success('Lưu thông tin giáo dân thành công');
    } catch (error) {
       yield put(parishionerActions.createParishionerFailed());
+      toast.error('Lưu thông tin giáo dân thất bại');
    }
 }
 
 function* updateParishioner(action: PayloadAction<ParishionerUpdateRequestDTO>) {
    try {
-      // Update
       yield call(parishionerApi.update, action.payload);
-
-      // Notify success
       yield put(parishionerActions.updateParishionerSuccess());
-      toast.success('Đã lưu thông tin');
-
-      // Reload detail
+      toast.success('Đã lưu thông tin giáo dân');
       yield put(parishionerActions.fetchParishionerDetail(action.payload.id));
    } catch (error) {
-      // Notify error
       yield put(parishionerActions.updateParishionerFailed());
-      toast.error('Lưu thông tin thất bại');
+      toast.error('Lưu thông tin giáo dân thất bại');
    }
 }
 
@@ -88,8 +84,10 @@ function* deleteParishioner(action: PayloadAction<ID>) {
       yield put(parishionerActions.deleteParishionerSuccess());
       const filter: PaginatedListParams = yield select(selectParishionerFilter);
       yield put(parishionerActions.fetchParishionerList({ ...filter, page: 1 }));
+      toast.success('Xoá thông tin giáo dân thành công');
    } catch (error) {
       yield put(parishionerActions.deleteParishionerFailed());
+      toast.error('Xoá thông tin giáo dân thất bại');
    }
 }
 

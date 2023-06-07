@@ -11,7 +11,7 @@ import { ApiParamField } from 'constants/api';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
 import { DateFormat, MaleChristianNames, ParishNames, Paths } from 'constants/strings';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { AddParishionerButton } from 'features/parishioner/pages/add-parishioner-button';
 import {
    parishionerActions,
@@ -30,7 +30,9 @@ import {
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 import { Link, useParams } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 enum RelativeType {
    Father,
@@ -43,6 +45,12 @@ enum RelativeType {
 interface RemoveRelativeOptions {
    childrenId?: ID;
 }
+
+const schema = yup.object().shape({
+   fullName: yup.string().required('Bắt buộc'),
+   christianName: yup.string().required('Bắt buộc'),
+   parishName: yup.string().required('Bắt buộc'),
+});
 
 export function ParishionerDetailPage() {
    const { id } = useParams<{ id?: string }>();
@@ -71,6 +79,7 @@ export function ParishionerDetailPage() {
    );
    const { control, handleSubmit, reset, watch } = useForm<ParishionerFormData>({
       defaultValues,
+      resolver: yupResolver(schema),
    });
    const selectedGender = +watch('gender');
 
@@ -267,6 +276,8 @@ export function ParishionerDetailPage() {
       setOpenRelativeSelectModal(true);
    };
 
+   const mapDate = (date?: string): Dayjs | undefined => (date ? dayjs(date) : undefined);
+
    useEffect(() => {
       if (!isCreating) {
          dispatch(parishionerActions.fetchParishionerDetail(id!));
@@ -287,13 +298,13 @@ export function ParishionerDetailPage() {
             address: parishionerDetail.address,
             note: parishionerDetail.note,
             parishName: parishionerDetail.parishName,
-            dateOfBaptism: dayjs(parishionerDetail.dateOfBaptism),
-            dateOfFirstCommunion: dayjs(parishionerDetail.dateOfFirstCommunion),
-            dateOfConfirmation: dayjs(parishionerDetail.dateOfConfirmation),
-            dateOfOath: dayjs(parishionerDetail.dateOfOath),
-            dateOfWedding: dayjs(parishionerDetail.dateOfWedding),
-            dateOfHolyOrder: dayjs(parishionerDetail.dateOfHolyOrder),
-            dateOfDeath: dayjs(parishionerDetail.dateOfDeath),
+            dateOfBaptism: mapDate(parishionerDetail.dateOfBaptism),
+            dateOfFirstCommunion: mapDate(parishionerDetail.dateOfFirstCommunion),
+            dateOfConfirmation: mapDate(parishionerDetail.dateOfConfirmation),
+            dateOfOath: mapDate(parishionerDetail.dateOfOath),
+            dateOfWedding: mapDate(parishionerDetail.dateOfWedding),
+            dateOfHolyOrder: mapDate(parishionerDetail.dateOfHolyOrder),
+            dateOfDeath: mapDate(parishionerDetail.dateOfDeath),
          });
 
          setFather(parishionerDetail.father);
@@ -352,7 +363,12 @@ export function ParishionerDetailPage() {
                      <div className="col-span-4 pt-2 pb-4 pr-4">
                         <div className="grid grid-cols-3 gap-12">
                            <div className="space-y-7">
-                              <InputField label="Họ tên" name="fullName" control={control} />
+                              <InputField
+                                 label="Họ tên"
+                                 name="fullName"
+                                 control={control}
+                                 showAsterisk
+                              />
 
                               <DateField label="Ngày sinh" name="dateOfBirth" control={control} />
 
@@ -379,6 +395,7 @@ export function ParishionerDetailPage() {
                                  label="Tên thánh"
                                  options={MaleChristianNames.map((name) => ({ name, value: name }))}
                                  control={control}
+                                 showAsterisk
                               />
 
                               <InputField
@@ -525,6 +542,7 @@ export function ParishionerDetailPage() {
                                  label="Giáo họ"
                                  options={ParishNames.map((name) => ({ name, value: name }))}
                                  control={control}
+                                 showAsterisk
                               />
 
                               <DateField
