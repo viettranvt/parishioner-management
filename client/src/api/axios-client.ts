@@ -1,7 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, HttpStatusCode } from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import AppConfig from 'constants/app-config';
 import { LocalStorageItem } from 'constants/local-storage';
+import { PageId, Pages } from 'constants/pages';
 import qs from 'qs';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -39,9 +40,12 @@ axiosClient.interceptors.response.use(
       // Do something with response data
       return camelcaseKeys(response.data.data, { deep: true });
    },
-   function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
+   function (error: AxiosError) {
+      if (error.response?.status === HttpStatusCode.Unauthorized) {
+         localStorage.removeItem(LocalStorageItem.accessToken);
+         window.location.href = Pages.get(PageId.Login)?.path ?? '';
+      }
+
       return Promise.reject(error);
    }
 );

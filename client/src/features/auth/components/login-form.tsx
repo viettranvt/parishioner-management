@@ -1,11 +1,12 @@
-import { Button } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField } from 'components/forms/fields';
+import { SecurityIcon } from 'components/icons';
+import { selectLogging } from 'features/auth/auth-slice';
 import { AuthLoginFormData } from 'models';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { CircularProgress } from '@mui/material';
-import { SecurityIcon } from 'components/icons';
 
 export interface LoginFormProps {
    onSubmit?: (formValues: AuthLoginFormData) => void;
@@ -17,17 +18,14 @@ const schema = yup.object().shape({
 });
 
 export function LoginForm({ onSubmit }: LoginFormProps) {
-   const {
-      control,
-      handleSubmit,
-      formState: { isSubmitting },
-   } = useForm<AuthLoginFormData>({
+   const { control, handleSubmit } = useForm<AuthLoginFormData>({
       defaultValues: {
          username: '',
          password: '',
       },
       resolver: yupResolver(schema),
    });
+   const logging = useSelector(selectLogging);
 
    const handleFormSubmit = (formValues: AuthLoginFormData) => {
       onSubmit?.(formValues);
@@ -54,19 +52,18 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
          />
 
          <div>
-            <Button
+            <LoadingButton
                fullWidth
                size="large"
                type="submit"
                variant="contained"
-               startIcon={
-                  isSubmitting ? <CircularProgress size={16} color="inherit" /> : <SecurityIcon />
-               }
-               disabled={isSubmitting}
+               startIcon={<SecurityIcon />}
+               loading={logging}
+               loadingPosition="start"
                className="bg-gradient-to-r from-primary-dark to-primary"
             >
                ĐĂNG NHẬP
-            </Button>
+            </LoadingButton>
          </div>
       </form>
    );

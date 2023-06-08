@@ -1,21 +1,22 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from 'api';
 import { LocalStorageItem } from 'constants/local-storage';
+import { PageId, Pages } from 'constants/pages';
+import { ErrorMessages, ErrorType } from 'constants/strings';
 import { authActions } from 'features/auth/auth-slice';
 import { AuthLoginFormData, AuthLoginResponseDTO } from 'models';
+import { toast } from 'react-toastify';
 import { push } from 'redux-first-history';
-import { call, delay, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, take } from 'redux-saga/effects';
 
 function* handleLogin(payload: AuthLoginFormData) {
    console.log('handle login', payload);
    try {
-      // call login api
       const { authInfo, token, refreshToken }: AuthLoginResponseDTO = yield call(
          authApi.login,
          payload
       );
 
-      // on login success
       localStorage.setItem(LocalStorageItem.accessToken, token);
       yield put(
          authActions.loginSuccess({
@@ -28,20 +29,17 @@ function* handleLogin(payload: AuthLoginFormData) {
          })
       );
 
-      // redirect to private page
       yield put(push('/'));
    } catch (error) {
-      yield put(authActions.loginFailed('Tên đăng nhập hoặc mật khẩu không chính xác'));
+      const msg = ErrorMessages[ErrorType.LogInFailed];
+      yield put(authActions.loginFailed(msg));
+      toast.error(msg, { position: 'top-center' });
    }
 }
 
 function* handleLogout() {
-   console.log('handle logout');
-   // call logout api
-   yield delay(1000);
    localStorage.removeItem(LocalStorageItem.accessToken);
-
-   // redirect to login page
+   yield put(push(Pages.get(PageId.Login)?.path ?? ''));
 }
 
 function* watchLoginFlow() {

@@ -2,24 +2,20 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import AppAssets from 'constants/app-assets';
 import { PageConfig, Pages } from 'constants/pages';
+import { Paths } from 'constants/strings';
+import { authActions } from 'features/auth/auth-slice';
 import { useActiveLocation } from 'hooks';
 import { Fragment, ReactNode, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const navbarItems = Array.from(Pages.values()).filter((p) => p.isPrivate && p.showOnNavbar);
 
-const user = {
-   name: 'Tom Cook',
-   email: 'tom@example.com',
-   imageUrl:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
+enum UserNavigationType {
+   SignOut,
+}
 
-const userNavigation = [
-   { name: 'Your Profile', href: '#' },
-   { name: 'Settings', href: '#' },
-   { name: 'Sign out', href: '#' },
-];
+const userNavigation = [{ name: 'Đăng xuất', type: UserNavigationType.SignOut }];
 
 function classNames(...classes: string[]) {
    return classes.filter(Boolean).join(' ');
@@ -32,6 +28,18 @@ export interface AdminLayoutProps {
 export function AdminLayout({ children }: AdminLayoutProps) {
    const activeLocation = useActiveLocation();
    const [activeNavItem, setActiveNavItem] = useState<PageConfig>();
+   const dispatch = useDispatch();
+
+   const handleClickUserNavigation = (type: UserNavigationType) => {
+      switch (type) {
+         case UserNavigationType.SignOut:
+            dispatch(authActions.logout());
+            break;
+
+         default:
+            break;
+      }
+   };
 
    useEffect(() => {
       let relatedPage: PageConfig | undefined;
@@ -48,8 +56,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <Disclosure as="nav" className="bg-white shadow-xl">
                {({ open }) => (
                   <>
-                     <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                        <div className="flex h-16 items-center justify-between">
+                     <div className="px-4 mx-auto max-w-7xl sm:px-6">
+                        <div className="flex items-center justify-between h-16">
                            <div className="flex items-center">
                               <div className="flex-shrink-0">
                                  <div className="-ml-2">
@@ -57,7 +65,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                        <img
                                           className="w-16 h-16"
                                           src={AppAssets.logoPath}
-                                          alt="Your Company"
+                                          alt="App logo"
                                           width="100%"
                                           height="100%"
                                        />
@@ -65,7 +73,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                  </div>
                               </div>
                               <div className="hidden md:block">
-                                 <div className="ml-10 flex items-baseline space-x-4">
+                                 <div className="flex items-baseline ml-10 space-x-4">
                                     {navbarItems.map((item) => {
                                        const active = activeNavItem?.id === item.id;
                                        return (
@@ -88,23 +96,23 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               </div>
                            </div>
                            <div className="hidden md:block">
-                              <div className="ml-4 flex items-center md:ml-6">
+                              <div className="flex items-center ml-4 md:ml-6">
                                  <button
                                     type="button"
-                                    className="rounded-full bg-primary-light p-1 text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                                    className="p-1 rounded-full bg-primary-light text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                                  >
                                     <span className="sr-only">View notifications</span>
-                                    <BellIcon className="h-6 w-6" aria-hidden="true" />
+                                    <BellIcon className="w-6 h-6" aria-hidden="true" />
                                  </button>
 
                                  {/* Profile dropdown */}
-                                 <Menu as="div" className="relative ml-3 z-50">
+                                 <Menu as="div" className="relative z-50 ml-3">
                                     <div>
-                                       <Menu.Button className="flex max-w-xs items-center rounded-full bg-primary-dark text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                                       <Menu.Button className="flex items-center max-w-xs text-sm rounded-full bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
                                           <span className="sr-only">Open user menu</span>
                                           <img
-                                             className="h-8 w-8 rounded-full"
-                                             src={user.imageUrl}
+                                             className="w-8 h-8 rounded-full"
+                                             src={Paths.defaultMaleAvatar}
                                              alt=""
                                           />
                                        </Menu.Button>
@@ -118,19 +126,21 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                        leaveFrom="transform opacity-100 scale-100"
                                        leaveTo="transform opacity-0 scale-95"
                                     >
-                                       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                       <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                           {userNavigation.map((item) => (
                                              <Menu.Item key={item.name}>
                                                 {({ active }) => (
-                                                   <a
-                                                      href={item.href}
+                                                   <span
+                                                      onClick={() =>
+                                                         handleClickUserNavigation(item.type)
+                                                      }
                                                       className={classNames(
                                                          active ? 'bg-gray-100' : '',
-                                                         'block px-4 py-2 text-sm text-gray-700'
+                                                         'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                                                       )}
                                                    >
                                                       {item.name}
-                                                   </a>
+                                                   </span>
                                                 )}
                                              </Menu.Item>
                                           ))}
@@ -139,14 +149,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                  </Menu>
                               </div>
                            </div>
-                           <div className="-mr-2 flex md:hidden">
+                           <div className="flex -mr-2 md:hidden">
                               {/* Mobile menu button */}
-                              <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                              <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 bg-gray-800 rounded-md hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                  <span className="sr-only">Open main menu</span>
                                  {open ? (
-                                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                                    <XMarkIcon className="block w-6 h-6" aria-hidden="true" />
                                  ) : (
-                                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                                    <Bars3Icon className="block w-6 h-6" aria-hidden="true" />
                                  )}
                               </Disclosure.Button>
                            </div>
@@ -154,7 +164,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                      </div>
 
                      <Disclosure.Panel className="md:hidden">
-                        <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                            {navbarItems.map((item) => {
                               const active = item.id === activeNavItem?.id;
                               return (
@@ -176,38 +186,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                               );
                            })}
                         </div>
-                        <div className="border-t border-gray-700 pt-4 pb-3">
-                           <div className="flex items-center px-5">
-                              <div className="flex-shrink-0">
-                                 <img
-                                    className="h-10 w-10 rounded-full"
-                                    src={user.imageUrl}
-                                    alt=""
-                                 />
-                              </div>
-                              <div className="ml-3">
-                                 <div className="text-base font-medium leading-none text-white">
-                                    {user.name}
-                                 </div>
-                                 <div className="text-sm font-medium leading-none text-gray-400">
-                                    {user.email}
-                                 </div>
-                              </div>
-                              <button
-                                 type="button"
-                                 className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                              >
-                                 <span className="sr-only">View notifications</span>
-                                 <BellIcon className="h-6 w-6" aria-hidden="true" />
-                              </button>
-                           </div>
-                           <div className="mt-3 space-y-1 px-2">
+                        <div className="pt-4 pb-3 border-t border-gray-700">
+                           <div className="px-2 mt-3 space-y-1">
                               {userNavigation.map((item) => (
                                  <Disclosure.Button
-                                    key={item.name}
+                                    key={item.type}
                                     as="a"
-                                    href={item.href}
-                                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                                    className="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:bg-gray-700 hover:text-white"
                                  >
                                     {item.name}
                                  </Disclosure.Button>
@@ -221,7 +206,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
             <main className="relative">
                <div
-                  className="absolute h-1/3 z-0 inset-0"
+                  className="absolute inset-0 z-0 h-1/3"
                   style={{
                      backgroundColor: '#0EA5E9',
                      backgroundImage:
@@ -230,7 +215,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                      backgroundSize: 'cover',
                   }}
                />
-               <div className="mx-auto max-w-7xl py-6 sm:px-6 relative z-10">{children}</div>
+               <div className="relative z-10 py-6 mx-auto max-w-7xl sm:px-6">{children}</div>
             </main>
          </div>
       </>

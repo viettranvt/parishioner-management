@@ -2,6 +2,7 @@ import { Search } from '@mui/icons-material';
 import {
    Box,
    Button,
+   CircularProgress,
    Dialog,
    DialogActions,
    DialogContent,
@@ -13,21 +14,29 @@ import {
 import { ParishionerCard } from 'components/parishioner-card';
 import { Gender } from 'constants/gender';
 import { DateFormat, Paths } from 'constants/strings';
+import { debounce } from 'lodash';
 import { ParishionerBasicData } from 'models';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export interface ParishionerSelectModalProps {
    selectedOptions?: ParishionerBasicData[];
+   totalOptions: number;
+   fetchOptions: () => void;
    options: ParishionerBasicData[];
    open?: boolean;
    multipleSelect?: boolean;
    onClose: () => void;
    onSave: (data: ParishionerBasicData[]) => void;
+   onSearch?: (term: string) => void;
 }
 
 export function ParishionerSelectModal({
    open = false,
+   totalOptions,
+   fetchOptions,
+   onSearch,
    multipleSelect = false,
    options,
    selectedOptions,
@@ -65,6 +74,15 @@ export function ParishionerSelectModal({
       onSave(selectedParishioners);
    };
 
+   const handleSearchParishioner = (term: string) => {
+      debouncedSearchParishioner(term);
+   };
+
+   const debouncedSearchParishioner = useMemo(
+      () => (onSearch ? debounce(onSearch, 300) : () => true),
+      [onSearch]
+   );
+
    useEffect(() => {
       setSelectedParishioners(selectedOptions ?? []);
    }, [selectedOptions]);
@@ -76,40 +94,63 @@ export function ParishionerSelectModal({
             <Box pt={2}>
                <TextField
                   label="Tìm kiếm giáo dân"
-                  placeholder="Họ tên, tên thánh"
+                  placeholder="Họ tên"
                   type="search"
                   fullWidth
                   InputProps={{ startAdornment: <Search /> }}
+                  onChange={(e) => handleSearchParishioner(e.target.value)}
                />
             </Box>
             <Box pt={2}>
-               <List disablePadding>
-                  {options.map((p) => (
-                     <ListItemButton
-                        key={p.id}
-                        selected={selectedParishioners.findIndex((sp) => sp.id === p.id) > -1}
-                        onClick={() => handleSelectParishioner(p)}
+               <div
+                  id="scrollableDiv"
+                  style={{
+                     height: 300,
+                     overflow: 'auto',
+                  }}
+               >
+                  <List disablePadding>
+                     <InfiniteScroll
+                        scrollableTarget="scrollableDiv"
+                        dataLength={options.length}
+                        next={fetchOptions}
+                        hasMore={options.length < totalOptions}
+                        loader={
+                           <div className="flex justify-center align-bottom">
+                              <CircularProgress size={16} />
+                              <span className="ml-2 text-sm">Đang tải thêm...</span>
+                           </div>
+                        }
                      >
-                        <ParishionerCard
-                           fullName={p.fullName}
-                           avatar={
-                              p.gender === Gender.Male
-                                 ? Paths.defaultMaleAvatar
-                                 : Paths.defaultFemaleAvatar
-                           }
-                           title={[
-                              p.christianName,
-                              p.dateOfBirth !== undefined
-                                 ? moment(p.dateOfBirth).format(DateFormat)
-                                 : undefined,
-                              p.parishName,
-                           ]
-                              .filter((e) => e)
-                              .join(' • ')}
-                        />
-                     </ListItemButton>
-                  ))}
-               </List>
+                        {options.map((p) => (
+                           <ListItemButton
+                              key={p.id}
+                              selected={selectedParishioners.findIndex((sp) => sp.id === p.id) > -1}
+                              onClick={() => handleSelectParishioner(p)}
+                           >
+                              <ParishionerCard
+                                 id={p.id}
+                                 fullName={p.fullName}
+                                 avatar={
+                                    p.gender === Gender.Male
+                                       ? Paths.defaultMaleAvatar
+                                       : Paths.defaultFemaleAvatar
+                                 }
+                                 title={[
+                                    p.christianName,
+                                    p.dateOfBirth !== undefined
+                                       ? moment(p.dateOfBirth).format(DateFormat)
+                                       : undefined,
+                                    p.parishName,
+                                 ]
+                                    .filter((e) => e)
+                                    .join(' • ')}
+                              />
+                           </ListItemButton>
+                        ))}
+                     </InfiniteScroll>
+                  </List>
+               </div>
             </Box>
          </DialogContent>
          <DialogActions>

@@ -91,7 +91,7 @@ export function ParishionerTable({
                         >
                            <TableCell>
                               {' '}
-                              <ParishionerCard fullName={row.fullName} />
+                              <ParishionerCard id={row.id} fullName={row.fullName} />
                            </TableCell>
                            <TableCell>{row.christianName}</TableCell>
                            <TableCell>

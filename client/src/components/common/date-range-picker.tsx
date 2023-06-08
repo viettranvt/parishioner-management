@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DateRangePicker as RcDateRangePicker, RangeKeyDict } from 'react-date-range';
+import { default as vi } from 'date-fns/locale/vi';
 
 export interface DateRangePickerProps {
    initialValues?: DateRangePickerDates;
@@ -41,6 +42,7 @@ export const DateRangePicker = ({ onSelect, initialValues }: DateRangePickerProp
                },
             ]}
             onChange={handleSelect}
+            locale={vi}
          />
       </div>
    );
