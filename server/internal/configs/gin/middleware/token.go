@@ -65,7 +65,7 @@ func customToken(appContext components.AppContext, options options_util.Options)
 		data, err := token_util.Decode(ctx, token, options.JwtSecretKey)
 
 		if err != nil {
-			response := common.NewFullErrorResponse(http.StatusBadRequest, nil, err.Error(), err.Error(), err.Error())
+			response := common.NewFullErrorResponse(http.StatusUnauthorized, nil, err.Error(), err.Error(), err.Error())
 			c.AbortWithStatusJSON(response.StatusCode, response)
 			return
 		}

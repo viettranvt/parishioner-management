@@ -20,8 +20,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/server
 FROM alpine:3.18.0
 WORKDIR /app
 COPY --from=builder /app/server .
-# copy env because go is not support read env
-COPY ./.env .
+# create empty env file because go need a env container
+RUN touch .env
+RUN chmod +x .env
+# COPY ./.env .
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.

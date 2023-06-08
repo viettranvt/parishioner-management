@@ -2,7 +2,6 @@ package parishioner_storage
 
 import (
 	"context"
-	"fmt"
 	"parishioner_management/internal/common"
 	database_field_const "parishioner_management/internal/constant/database/field"
 	database_model_const "parishioner_management/internal/constant/database/model"
@@ -67,7 +66,6 @@ func (mongo *mongoStore) GetParishionerListHasPagination(
 
 				if op == database_operator_const.Eq {
 					filter[param.Field] = param.Values[0]
-					fmt.Println(param.Field)
 					continue
 				}
 

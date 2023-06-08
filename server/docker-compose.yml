@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: docker/server.dockerfile
-    image: server-api:1.0.0
+    image: parishioner-management:1.0.0
     container_name: server-api
     restart: always
     depends_on:

@@ -3,7 +3,6 @@ package relation_storage
 import (
 	"context"
 	"errors"
-	"fmt"
 	database_model_const "parishioner_management/internal/constant/database/model"
 	relation_database "parishioner_management/internal/databases/relation"
 	database_util "parishioner_management/internal/utils/database"
@@ -25,9 +24,6 @@ func (mongo *mongoStore) InsertRelation(
 	objectID, ok := result.InsertedID.(primitive.ObjectID)
 
 	if !ok {
-		fmt.Println("id: ", result.InsertedID)
-		fmt.Println("id: ", objectID)
-		fmt.Println("model: ", model)
 		return nil, errors.New("insert failed")
 	}
 
