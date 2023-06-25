@@ -54,7 +54,10 @@ func (data Parishioner) ValidateWhenCreating() error {
 func (data Parishioner) ValidateWhenUpdating() error {
 	return validation.ValidateStruct(&data,
 		validation.Field(&data.Id, validation.Required),
-		validation.Field(&data.Gender, validation.In(
+		validation.Field(&data.ParishName, validation.Required),
+		validation.Field(&data.ChristianName, validation.Required),
+		validation.Field(&data.FullName, validation.Required),
+		validation.Field(&data.Gender, validation.Required, validation.In(
 			database_const.Female,
 			database_const.Male,
 		)),

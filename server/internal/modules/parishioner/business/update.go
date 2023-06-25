@@ -53,71 +53,67 @@ func (biz *updateBusiness) UpdateParishioner(
 
 // this func will convert input data to parishioner model
 func (biz *updateBusiness) ApplyUpdate(ctx context.Context, data *parishioner_model.Parishioner, model *parishioner_database.Model) {
-	if data.FullName != nil || *data.FullName != "" {
-		model.FullName = *data.FullName
-	}
-
-	if data.Address != nil || *data.Address != "" {
-		model.Address = data.Address
-	}
-
-	if data.Note != nil {
-		model.Note = data.Note
-	}
-
-	if data.Gender != nil {
-		model.Gender = *data.Gender
-	}
-
-	if data.Avatar != nil {
-		model.Avatar = data.Avatar
-	}
-
-	if data.ParishName != nil || *data.ParishName != "" {
-		model.ParishName = string_util.NormalizedData(*data.ParishName, false)
-	}
-
-	if data.ChristianName != nil || *data.ChristianName != "" {
-		model.ChristianName = string_util.NormalizedData(*data.ChristianName, false)
-	}
+	model.FullName = *data.FullName
+	model.Address = data.Address
+	model.Note = data.Note
+	model.Gender = *data.Gender
+	model.Avatar = data.Avatar
+	model.ParishName = string_util.NormalizedData(*data.ParishName, false)
+	model.ChristianName = string_util.NormalizedData(*data.ChristianName, false)
 
 	if data.DateOfBirth != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfBirth)
 		model.DateOfBirth = &date
+	} else {
+		model.DateOfBirth = nil
 	}
 
 	if data.DateOfDeath != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfDeath)
 		model.DateOfDeath = &date
+	} else {
+		model.DateOfDeath = nil
 	}
 
 	if data.DateOfWedding != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfWedding)
 		model.DateOfWedding = &date
+	} else {
+		model.DateOfWedding = nil
 	}
 
 	if data.DateOfBaptism != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfBaptism)
 		model.DateOfBaptism = &date
+	} else {
+		model.DateOfBaptism = nil
 	}
 
 	if data.DateOfFirstCommunion != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfFirstCommunion)
 		model.DateOfFirstCommunion = &date
+	} else {
+		model.DateOfFirstCommunion = nil
 	}
 
 	if data.DateOfConfirmation != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfConfirmation)
 		model.DateOfConfirmation = &date
+	} else {
+		model.DateOfConfirmation = nil
 	}
 
 	if data.DateOfOath != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfOath)
 		model.DateOfOath = &date
+	} else {
+		model.DateOfOath = nil
 	}
 
 	if data.DateOfHolyOrder != nil {
 		date := date_util.ConvertMillisecondToTime(*data.DateOfHolyOrder)
 		model.DateOfHolyOrder = &date
+	} else {
+		model.DateOfHolyOrder = nil
 	}
 }
