@@ -3,14 +3,20 @@ import { Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { history } from 'app/store';
 import { ParishionerSelectModal } from 'components';
-import { Button as CustomButon, FormFieldLabel } from 'components/common';
+import { Button as CustomButton, FormFieldLabel } from 'components/common';
 import { DateField, InputField, RadioField, SelectField } from 'components/forms/fields';
 import { ArrowLeftIcon, PlusIcon, RefreshIcon } from 'components/icons';
 import { ParishionerCard, ParishionerCardStyle } from 'components/parishioner-card';
 import { ApiParamField } from 'constants/api';
 import { Gender } from 'constants/gender';
 import { PageId, Pages } from 'constants/pages';
-import { DateFormat, MaleChristianNames, ParishNames, Paths } from 'constants/strings';
+import {
+   DateFormat,
+   FemaleChristianNames,
+   MaleChristianNames,
+   ParishNames,
+   Paths,
+} from 'constants/strings';
 import dayjs, { Dayjs } from 'dayjs';
 import { AddParishionerButton } from 'features/parishioner/pages/add-parishioner-button';
 import {
@@ -77,11 +83,12 @@ export function ParishionerDetailPage() {
       }),
       []
    );
-   const { control, handleSubmit, reset, watch } = useForm<ParishionerFormData>({
+   const { control, handleSubmit, reset, watch, setValue } = useForm<ParishionerFormData>({
       defaultValues,
       resolver: yupResolver(schema),
    });
    const selectedGender = +watch('gender');
+   const christianName = watch('christianName');
 
    const [openRelativeSelectModal, setOpenRelativeSelectModal] = useState<boolean>(false);
 
@@ -293,7 +300,7 @@ export function ParishionerDetailPage() {
          reset({
             fullName: parishionerDetail.fullName,
             gender: parishionerDetail.gender.toString(),
-            dateOfBirth: dayjs(parishionerDetail.dateOfBirth),
+            dateOfBirth: mapDate(parishionerDetail.dateOfBirth),
             christianName: parishionerDetail.christianName,
             address: parishionerDetail.address,
             note: parishionerDetail.note,
@@ -322,6 +329,15 @@ export function ParishionerDetailPage() {
    useEffect(() => {
       dispatch(parishionerActions.fetchParishionerOptions({ page: 1, limit: 10 }));
    }, [dispatch]);
+
+   useEffect(() => {
+      if (
+         (selectedGender === Gender.Male && !MaleChristianNames.includes(christianName)) ||
+         (selectedGender === Gender.Female && !FemaleChristianNames.includes(christianName))
+      ) {
+         setValue('christianName', '');
+      }
+   }, [christianName, selectedGender, setValue]);
 
    return (
       <>
@@ -393,7 +409,10 @@ export function ParishionerDetailPage() {
                               <SelectField
                                  name="christianName"
                                  label="Tên thánh"
-                                 options={MaleChristianNames.map((name) => ({ name, value: name }))}
+                                 options={(selectedGender === Gender.Male
+                                    ? MaleChristianNames
+                                    : FemaleChristianNames
+                                 ).map((name) => ({ name, value: name }))}
                                  control={control}
                                  showAsterisk
                               />
@@ -500,7 +519,7 @@ export function ParishionerDetailPage() {
                                  <div className="flex justify-between">
                                     <FormFieldLabel>Con ({children?.length ?? 0})</FormFieldLabel>
                                     {Boolean(children?.length) && (
-                                       <CustomButon
+                                       <CustomButton
                                           icon={<PlusIcon className="w-4 h-4" />}
                                           shape="circle"
                                           size="sm"
